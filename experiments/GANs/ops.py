@@ -42,7 +42,7 @@ def lrelu(inputs, leak=0.2):
     return tf.maximum(inputs, leak*inputs)
 
 def sigmoid(inputs):
-    return tf.sigmoid(inputs)
+    return tf.nn.sigmoid(inputs)
 
 def tanh(inputs):
-    return tf.tanh(inputs)
+    return tf.nn.tanh(inputs)
