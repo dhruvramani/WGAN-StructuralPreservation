@@ -92,13 +92,3 @@ class Feed:
 
 		assert imgs.shape[0] > 0
 		return imgs
-
-		
-
-
-
-
-
-
-
-

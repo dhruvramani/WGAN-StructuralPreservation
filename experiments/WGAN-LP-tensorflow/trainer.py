@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import linear_sum_assignment
 from scipy.spatial import distance
 
-import data_generator
+from dataset_generator import *
 from model import Generator, Critic
 from reg_losses import get_regularization_term
 
@@ -17,7 +17,7 @@ __eval_step_list__ = [10, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 15000, 200
 flags = tf.app.flags
 flags.DEFINE_integer("n_epoch", 20000, "Epoch to train [20000]")
 flags.DEFINE_integer("n_batch_size", 256, "Batch size to train [256]")
-flags.DEFINE_integer("latent_dimensionality", 2, "Dimensionality of the latent variables [2]")
+flags.DEFINE_integer("latent_dimensionality", 128, "Dimensionality of the latent variables [2]")
 
 """
 During training, 10 critic updates are performed for every generator update,
@@ -86,6 +86,7 @@ class Trainer(object):
 
         self.coord = None
         self.threads = None
+        self.feed_data = None
 
         self.define_dataset()
         self.define_latent()
@@ -98,8 +99,10 @@ class Trainer(object):
         self.define_feed_and_fetch()
 
     def define_dataset(self):
-        self.dataset_generator = iter(getattr(data_generator, FLAGS.dataset)(FLAGS.n_batch_size))
-        self.real_input = tf.placeholder(tf.float32, shape=(None, 2))
+        self.feed_data = Feed("./dataset/celeba", FLAGS.n_batch_size)
+        shape = self.feed_data.get_img_shape()
+        self.dataset_generator = iter(self.feed_data)
+        self.real_input = tf.placeholder(tf.float32, shape=(None, shape[0], shape[1]))
 
     def define_latent(self):
         self.z = tf.random_normal([FLAGS.n_batch_size, FLAGS.latent_dimensionality], mean=0.0, stddev=1.0, name='z')
@@ -214,7 +217,7 @@ class Trainer(object):
     def draw_level_sets(self, step,
                         x_min=-2.5, x_max=2.5,
                         y_min=-2.5, y_max=2.5,
-                        n_batch=2):
+                        n_batch=2): # NOTE - might not need it
         x = np.linspace(x_min, x_max, 200)
         y = np.linspace(y_min, y_max, 200)
 

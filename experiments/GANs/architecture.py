@@ -29,7 +29,7 @@ class GAN:
             minicols = self.img_shape[1] // 32 
 
             # batch normalization, which needs to know whether this is training or
-            # application
+            # application 
             bn = BN(self.is_training)
 
             # dense (i.e. fully connected) layer followed by reshaping into the tiny
