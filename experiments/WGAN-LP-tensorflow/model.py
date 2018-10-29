@@ -7,7 +7,6 @@ slim = tf.contrib.slim
 class Model(object):
     def __init__(self, input_tensor: tf.Variable,
                  variable_scope_name: str,
-                 activation_fn: Callable,
                  reuse: bool,
                  imp_shape=(64, 64, 4),
                  zsize=128):
@@ -19,14 +18,13 @@ class Model(object):
         self.zsize = zsize
         self.output_tensor = None
         self.var_list = None
-        self.activation_fn = activation_fn
         self.reuse = reuse
 
 
 class Generator(Model):
     
-    def __init__(self, input_tensor: tf.Variable, variable_scope_name: str='Generator', activation_fn: Callable=__leaky_relu__, reuse: bool=False):        
-        super(Generator, self).__init__(input_tensor, variable_scope_name, activation_fn, reuse)
+    def __init__(self, input_tensor: tf.Variable, variable_scope_name: str='Generator', reuse: bool=False):        
+        super(Generator, self).__init__(input_tensor, variable_scope_name, reuse)
         self.define_model()
 
     def define_model(self):
@@ -50,10 +48,9 @@ class Critic(Model):
     def __init__(self,
                  input_tensor: tf.Variable,
                  variable_scope_name: str='Critic',
-                 activation_fn: Callable=__leaky_relu__,
                  reuse: bool=False):
 
-        super(Critic, self).__init__(input_tensor, variable_scope_name, activation_fn, reuse)
+        super(Critic, self).__init__(input_tensor, variable_scope_name, reuse)
         self.define_model()
 
 
