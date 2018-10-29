@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import linear_sum_assignment
 from scipy.spatial import distance
 
-from dataset_generator import *
+from data_generator import *
 from model import Generator, Critic
 from reg_losses import get_regularization_term
 
