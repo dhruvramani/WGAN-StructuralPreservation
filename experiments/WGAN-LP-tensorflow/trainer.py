@@ -2,6 +2,7 @@ import os
 
 import tensorflow as tf
 import numpy as np
+import scipy.misc 
 import matplotlib.pyplot as plt
 from scipy.optimize import linear_sum_assignment
 from scipy.spatial import distance
@@ -15,7 +16,7 @@ slim = tf.contrib.slim
 __eval_step_list__ = [10, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 15000, 20000]
 
 flags = tf.app.flags
-flags.DEFINE_integer("n_epoch", 20000, "Epoch to train [20000]")
+flags.DEFINE_integer("n_epoch", 1, "Epoch to train [20000]") # TODO Change
 flags.DEFINE_integer("n_batch_size", 256, "Batch size to train [256]")
 flags.DEFINE_integer("latent_dimensionality", 128, "Dimensionality of the latent variables [2]")
 
@@ -99,7 +100,7 @@ class Trainer(object):
         self.define_feed_and_fetch()
 
     def define_dataset(self):
-        self.feed_data = Feed("./dataset/celeba", FLAGS.n_batch_size)
+        self.feed_data = CelebAFeed("./dataset/celebA_redux", FLAGS.n_batch_size)
         shape = self.feed_data.get_img_shape()
         self.dataset_generator = iter(self.feed_data)
         self.real_input = tf.placeholder(tf.float32, shape=(None, shape[0], shape[1]))
@@ -297,6 +298,8 @@ class Trainer(object):
 
                 g_fetch_dict = self.sess.run(self.g_update_fetch_dict)
 
+                # NOTE : if(step % 100 == 0): # /100
+                scipy.misc.imsave("{}.png".format(int(step)), g_fetch_dict["G_z"])
                 self.summary_writer.add_summary(c_fetch_dict["summary"], c_fetch_dict["step"])
                 self.summary_writer.add_summary(g_fetch_dict["summary"], g_fetch_dict["step"])
                 self.summary_writer.flush()
