@@ -44,7 +44,7 @@ class GeneratorGaussians8(object):
             yield dataset
 
 
-class Feed(object):
+class CelebAFeed(object):
     '''Feed image data to training process. '''
     def __init__(self, data_directory, batch_size, ncached_batches=100, shuffle=False):
         self.data_directory = data_directory
