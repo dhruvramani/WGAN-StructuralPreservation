@@ -1,5 +1,5 @@
 # Modified from https://github.com/igul222/improved_wgan_training/blob/master/gan_toy.py
-
+import os
 import numpy as np
 import sklearn.datasets
 import random
