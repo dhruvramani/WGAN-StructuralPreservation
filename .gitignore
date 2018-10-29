@@ -1,4 +1,5 @@
-dataset/
+dataset/WGAN-LP-tensorflow/dataset
+experiments/
 experiments/GANs/data/
 
 # Byte-compiled / optimized / DLL files
