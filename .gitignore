@@ -1,4 +1,5 @@
-experiments/GANs/data
+dataset/
+experiments/GANs/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
