@@ -13,7 +13,7 @@ def get_perbatuation_samples(training_samples, generated_samples, per_type,
     # Gulrajani, Ishaan, et al. "Improved training of wasserstein gans." arXiv preprint arXiv:1704.00028 (2017).
     elif per_type == 'wgan_gp':
         epsilon = tf.random_uniform(
-            shape=[tf.shape(training_samples)[0], 1],
+            shape=[tf.shape(training_samples)[0], 1, 1, 1]],
             minval=0.,
             maxval=1.
         )
@@ -22,7 +22,7 @@ def get_perbatuation_samples(training_samples, generated_samples, per_type,
     # Kodali, Naveen, et al. "How to Train Your DRAGAN." arXiv preprint arXiv:1705.07215 (2017).
     elif per_type == 'dragan_only_training':
         u = tf.random_uniform(
-            shape=[tf.shape(training_samples)[0], 1],
+            shape=[tf.shape(training_samples)[0], 1, 1, 1],
             minval=0.,
             maxval=1.
         )
@@ -31,7 +31,7 @@ def get_perbatuation_samples(training_samples, generated_samples, per_type,
         delta = dragan_parameter_C * batch_std * u
 
         alpha = tf.random_uniform(
-            shape=[tf.shape(training_samples)[0]],
+            shape=[tf.shape(training_samples)[0], 1, 1, 1]], # NOTE : Changed due to shape being batch, r, col, chan
             minval=0.,
             maxval=1.
         )
@@ -42,7 +42,7 @@ def get_perbatuation_samples(training_samples, generated_samples, per_type,
         samples = tf.concat([training_samples, generated_samples], axis=0)
 
         u = tf.random_uniform(
-            shape=[tf.shape(samples)[0], 1],
+            shape=[tf.shape(samples)[0], 1, 1, 1]],
             minval=0.,
             maxval=1.
         )
@@ -51,7 +51,7 @@ def get_perbatuation_samples(training_samples, generated_samples, per_type,
         delta = dragan_parameter_C * batch_std * u
 
         alpha = tf.random_uniform(
-            shape=[tf.shape(samples)[0], 1],
+            shape=[tf.shape(samples)[0], 1, 1, 1]],
             minval=0.,
             maxval=1.
         )
