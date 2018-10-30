@@ -31,7 +31,7 @@ def get_perbatuation_samples(training_samples, generated_samples, per_type,
         delta = dragan_parameter_C * batch_std * u
 
         alpha = tf.random_uniform(
-            shape=[tf.shape(training_samples)[0], 1],
+            shape=[tf.shape(training_samples)[0]],
             minval=0.,
             maxval=1.
         )
