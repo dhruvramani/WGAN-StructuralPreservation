@@ -296,11 +296,16 @@ class Trainer(object):
 
                 for _ in range(n_c_iters):
                     c_fetch_dict = self.sess.run(self.c_update_fetch_dict, feed_dict=self.c_feed_dict)
+                    print("Critic - epoch : {}, step: {}, loss: {}, reg_loss : {}".format(step, i, c_fetch_dict["loss"], c_fetch_dict["regularization_loss"]), end="\r")
 
+                print("\n")
                 g_fetch_dict = self.sess.run(self.g_update_fetch_dict)
 
+                print(g_fetch_dict["G_z"].shape)
+                print("Generator - epoch : {}, loss: {}".format(step, g_fetch_dict["loss"]))
+
                 # NOTE : if(step % 100 == 0): # /100
-                scipy.misc.imsave("./{}.png".format(int(step)), g_fetch_dict["G_z"])
+                #scipy.misc.imsave("./{}.png".format(int(step)), g_fetch_dict["G_z"])
                 self.summary_writer.add_summary(c_fetch_dict["summary"], c_fetch_dict["step"])
                 self.summary_writer.add_summary(g_fetch_dict["summary"], g_fetch_dict["step"])
                 self.summary_writer.flush()
