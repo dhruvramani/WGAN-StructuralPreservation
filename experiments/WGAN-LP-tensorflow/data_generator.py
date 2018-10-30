@@ -68,7 +68,7 @@ class CelebAFeed(object):
     def get_img_shape(self):
         path = os.path.join(self.data_directory, self.filenames[0])
         img = np.asarray(self.open_image(path))
-        return (img.shape[0], img.shape[1])
+        return (img.shape[0], img.shape[1], img.shape[2])
 
     # convert from global batch index (ie. between 0 and total number of 
     # batches in the entire training set) to corresponding cached batch index (number between

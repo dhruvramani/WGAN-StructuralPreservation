@@ -101,8 +101,10 @@ class Trainer(object):
     def define_dataset(self):
         self.feed_data = CelebAFeed("./dataset/celebA_redux/train", FLAGS.n_batch_size)
         shape = self.feed_data.get_img_shape()
+        print(shape)
+        _ = input()
         self.dataset_generator = iter(self.feed_data)
-        self.real_input = tf.placeholder(tf.float32, shape=(None, shape[0], shape[1]))
+        self.real_input = tf.placeholder(tf.float32, shape=(None, shape[0], shape[1], shape[2]))
 
     def define_latent(self):
         self.z = tf.random_normal([FLAGS.n_batch_size, FLAGS.latent_dimensionality], mean=0.0, stddev=1.0, name='z')
