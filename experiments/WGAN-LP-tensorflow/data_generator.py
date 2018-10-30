@@ -1,9 +1,10 @@
 # Modified from https://github.com/igul222/improved_wgan_training/blob/master/gan_toy.py
 import os
+import sys
 import numpy as np
 import sklearn.datasets
 import random
-
+from PIL import Image
 # This module referes 'Python Generator', not 'Generative Model'.
 
 

@@ -12,7 +12,7 @@ class Model(object):
                  zsize=128):
 
         self.input = input_tensor
-        self.is_training = is_training
+        #self.is_training = is_training
         self.variable_scope_name = variable_scope_name
         self.imp_shape = img_shape
         self.zsize = zsize

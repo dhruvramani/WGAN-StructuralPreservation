@@ -99,7 +99,7 @@ class Trainer(object):
         self.define_feed_and_fetch()
 
     def define_dataset(self):
-        self.feed_data = CelebAFeed("./dataset/celebA_redux", FLAGS.n_batch_size)
+        self.feed_data = CelebAFeed("./dataset/celebA_redux/train", FLAGS.n_batch_size)
         shape = self.feed_data.get_img_shape()
         self.dataset_generator = iter(self.feed_data)
         self.real_input = tf.placeholder(tf.float32, shape=(None, shape[0], shape[1]))
