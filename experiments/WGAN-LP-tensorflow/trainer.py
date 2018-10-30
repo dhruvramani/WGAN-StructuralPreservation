@@ -214,75 +214,18 @@ class Trainer(object):
             self.real_input: None
         }
 
-    '''
-    def draw_level_sets(self, step,
-                        x_min=-2.5, x_max=2.5,
-                        y_min=-2.5, y_max=2.5,
-                        n_batch=2): # NOTE - might not need it
-        x = np.linspace(x_min, x_max, 200)
-        y = np.linspace(y_min, y_max, 200)
-
-        x, y = np.meshgrid(x, y)
-        grid_pts = np.stack([x.flatten(), y.flatten()], axis=1)
-
-        z = self.sess.run(self.critic_x.output_tensor, feed_dict={self.real_input: grid_pts})
-        z = np.reshape(z, (200, 200))
-
-        plt.contour(x, y, z, 30, cmap='copper')
-
-        real = list()
-        fake = list()
-        perturbated = list()
-        for i in range(n_batch):
-            __real__ = next(self.dataset_generator)
-
-            __fake__, __perturbated__ = \
-                self.sess.run([self.generator.output_tensor, self.x_hat], feed_dict={self.real_input: __real__})
-            real.append(__real__)
-            fake.append(__fake__)
-            perturbated.append(__perturbated__)
-
-        real = np.vstack(real)
-        fake = np.vstack(fake)
-        perturbated = np.vstack(perturbated)
-
-        plt.scatter(perturbated[:, 0], perturbated[:, 1], c='r', s=1)
-        plt.scatter(real[:, 0], real[:, 1], c='y', s=2)
-        plt.scatter(fake[:, 0], fake[:, 1], c='g', s=2)
-
-        plt.savefig(self.ckpt_dir+str(step)+'.png')
-        plt.clf()
-
-    def estimate_earth_mover_distance(self, step, n_batch=2):
-        real = list()
-        fake = list()
-
-        for i in range(n_batch):
-            __real__ = next(self.dataset_generator)
-            __fake__ = self.sess.run(self.generator.output_tensor)
-
-            real.append(__real__)
-            fake.append(__fake__)
-
-        real = np.vstack(real)
-        fake = np.vstack(fake)
-
-        cost_matrix = distance.cdist(fake, real, 'euclidean')
-
-        row_ind, col_ind = linear_sum_assignment(cost_matrix)
-        linear_sum = cost_matrix[row_ind, col_ind].sum()
-        emd = linear_sum/real.shape[0]
-
-        emd_fetch = self.sess.run(self.emd_summary, feed_dict={self.emd_placeholder: emd})
-        self.summary_writer.add_summary(emd_fetch, step)
-        self.summary_writer.flush()
-    '''
-
     def train(self):
         try:
             c_fetch_dict = None
             print("[.] Learning Start...")
             step = 0
+
+            if os.path.isfile("./logs/critic_train_loss.log"):
+                os.remove("./logs/critic_train_loss.log")
+            
+            if os.path.isfile("./logs/generator_train_loss.log"):
+                os.remove("./logs/generator_train_loss.log")
+
             while not self.coord.should_stop():
                 if step > FLAGS.n_epoch:
                     break
@@ -294,21 +237,26 @@ class Trainer(object):
                              if step < FLAGS.begining_init_step
                              else FLAGS.n_c_iters_over_begining_init_step)
 
+                c_fetch_dict = None
                 for i in range(n_c_iters):
                     c_fetch_dict = self.sess.run(self.c_update_fetch_dict, feed_dict=self.c_feed_dict)
                     print("Critic - epoch : {}, step: {}, loss: {}, reg_loss : {}".format(step, i, c_fetch_dict["loss"], c_fetch_dict["regularization_loss"]), end="\r")
 
                 print("\n")
                 g_fetch_dict = self.sess.run(self.g_update_fetch_dict)
-
-                print(g_fetch_dict["G_z"].shape)
                 print("Generator - epoch : {}, loss: {}".format(step, g_fetch_dict["loss"]))
 
                 # NOTE : if(step % 100 == 0): # /100
-                #scipy.misc.imsave("./{}.png".format(int(step)), g_fetch_dict["G_z"])
+                scipy.misc.imsave("./{}.png".format(int(step)), g_fetch_dict["G_z"][0])
                 self.summary_writer.add_summary(c_fetch_dict["summary"], c_fetch_dict["step"])
                 self.summary_writer.add_summary(g_fetch_dict["summary"], g_fetch_dict["step"])
                 self.summary_writer.flush()
+
+                with open("./logs/critic_train_loss.log", "a+") as file:
+                    file.write("{}\n".format(c_fetch_dict["loss"]))
+
+                with open("./logs/generator_train_loss.log", "a+") as file:
+                    file.write("{}\n".format(g_fetch_dict["loss"]))
 
                 '''
                 if step in __eval_step_list__:
@@ -329,22 +277,6 @@ class Trainer(object):
             self.coord.request_stop()
             self.coord.join(self.threads)
 
-    '''
-    def output_examples(self):
-        cols = self.output_cols
-        rows = self.output_rows
-        nimgs = cols*rows
-        zfeed = self.example_noise.eval() # need to eval to get value since it's a tf variable 
-        imgs = self.sess.run(self.Gz, feed_dict={ self.Z: zfeed, self.is_training: False })
-        imgs = imgs[:nimgs]
-        # conver [-1,1] back to [0,1] before saving
-        imgs = pixels01(imgs)
-        path = os.path.join(self.dirs['output'], '%06d.jpg' % self.output_img_idx)
-        tiled = tile(imgs, (rows, cols))
-        as_ints = (tiled * 255.0).astype('uint8')
-        Image.fromarray(as_ints).save(path)
-        self.output_img_idx += 1 
-    '''
 
 if __name__ == '__main__':
     trainer = Trainer()
