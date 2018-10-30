@@ -1,6 +1,6 @@
 import tensorflow as tf
 from typing import Callable
-from .operations import *
+from operations import *
 
 slim = tf.contrib.slim
 
@@ -35,11 +35,11 @@ class Generator(Model):
             minicols = self.img_shape[1] // 32 
             
             x = slim.fully_connected(inputs=x, num_outputs=minirows * minicols * 512, activation_fn=None)
-            x = __leaky_relu__(bn(reshape(x, (tf.shape(x)[0], minirows, minicols, 512))))
-            x = __leaky_relu__(bn(conv2dtr(x, 512)))
-            x = __leaky_relu__(bn(conv2dtr(x, 256)))
-            x = __leaky_relu__(bn(conv2dtr(x, 128)))
-            x = __leaky_relu__(bn(conv2dtr(x, 65)))
+            x = leaky_relu(bn(reshape(x, (tf.shape(x)[0], minirows, minicols, 512))))
+            x = leaky_relu(bn(conv2dtr(x, 512)))
+            x = leaky_relu(bn(conv2dtr(x, 256)))
+            x = leaky_relu(bn(conv2dtr(x, 128)))
+            x = leaky_relu(bn(conv2dtr(x, 65)))
 
             self.output_tensor = tf.nn.tanh(conv2dtr(x, self.img_shape[2]))
             self.var_list = tf.contrib.framework.get_variables(vs)
@@ -58,11 +58,11 @@ class Critic(Model):
     def define_model(self):
         with tf.variable_scope(self.variable_scope_name, reuse=self.reuse) as vs:
             x, bn = self.input, BN(True)
-            x = __leaky_relu__(conv2d(x, 64))
-            x = __leaky_relu__(bn(conv2d(x, 128)))
-            x = __leaky_relu__(bn(conv2d(x, 256)))
-            x = __leaky_relu__(bn(conv2d(x, 512)))
-            x = __leaky_relu__(bn(conv2d(x, 1024)))
+            x = leaky_relu(conv2d(x, 64))
+            x = leaky_relu(bn(conv2d(x, 128)))
+            x = leaky_relu(bn(conv2d(x, 256)))
+            x = leaky_relu(bn(conv2d(x, 512)))
+            x = leaky_relu(bn(conv2d(x, 1024)))
 
             x = slim.flatten(x)
             logits = slim.fully_connected(inputs=x, num_outputs=1, activation_fn=None)
