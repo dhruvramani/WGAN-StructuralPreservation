@@ -320,6 +320,22 @@ class Trainer(object):
             self.coord.request_stop()
             self.coord.join(self.threads)
 
+    '''
+    def output_examples(self):
+        cols = self.output_cols
+        rows = self.output_rows
+        nimgs = cols*rows
+        zfeed = self.example_noise.eval() # need to eval to get value since it's a tf variable 
+        imgs = self.sess.run(self.Gz, feed_dict={ self.Z: zfeed, self.is_training: False })
+        imgs = imgs[:nimgs]
+        # conver [-1,1] back to [0,1] before saving
+        imgs = pixels01(imgs)
+        path = os.path.join(self.dirs['output'], '%06d.jpg' % self.output_img_idx)
+        tiled = tile(imgs, (rows, cols))
+        as_ints = (tiled * 255.0).astype('uint8')
+        Image.fromarray(as_ints).save(path)
+        self.output_img_idx += 1 
+    '''
 
 if __name__ == '__main__':
     trainer = Trainer()
