@@ -294,7 +294,7 @@ class Trainer(object):
                              if step < FLAGS.begining_init_step
                              else FLAGS.n_c_iters_over_begining_init_step)
 
-                for _ in range(n_c_iters):
+                for i in range(n_c_iters):
                     c_fetch_dict = self.sess.run(self.c_update_fetch_dict, feed_dict=self.c_feed_dict)
                     print("Critic - epoch : {}, step: {}, loss: {}, reg_loss : {}".format(step, i, c_fetch_dict["loss"], c_fetch_dict["regularization_loss"]), end="\r")
 
