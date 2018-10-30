@@ -8,13 +8,14 @@ class Model(object):
     def __init__(self, input_tensor: tf.Variable,
                  variable_scope_name: str,
                  reuse: bool,
-                 imp_shape=(64, 64, 4),
-                 zsize=128):
+                 img_shape=(64, 64, 4),
+                 zsize=128,
+                 is_training=True): # TODO : Change from True
 
         self.input = input_tensor
-        self.is_training = True #is_training
+        self.is_training = is_training
         self.variable_scope_name = variable_scope_name
-        self.imp_shape = img_shape
+        self.img_shape = img_shape
         self.zsize = zsize
         self.output_tensor = None
         self.var_list = None
