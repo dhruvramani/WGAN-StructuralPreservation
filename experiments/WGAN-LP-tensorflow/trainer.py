@@ -32,6 +32,7 @@ flags.DEFINE_integer("n_c_iters_over_begining_init_step", 10, "[10]")
 flags.DEFINE_integer("interval_record_earth_mover", 10, "[10]")
 
 flags.DEFINE_float("learning_rate", 5e-5, "Learning rate of optimizer [5e-5]")
+flags.DEFINE_float("beta1", 0.5, "Beta of optimizer [0.5]")
 flags.DEFINE_float("Lambda", 5., "Weights for critics' regularization term [5]")
 flags.DEFINE_string("Regularization_type", "LP", "[no_reg, no_reg_but_clipping, LP, GP]")
 flags.DEFINE_string("Purturbation_type", "dragan_only_training",
@@ -137,7 +138,7 @@ class Trainer(object):
         self.step = tf.Variable(0, name='step', trainable=False)
         self.step_inc = tf.assign(self.step, self.step + 1)
 
-        optimizer = tf.train.RMSPropOptimizer(FLAGS.learning_rate)
+        optimizer = tf.train.AdamOptimizer(learning_rate=FLAGS.learning_rate, beta1=FLAGS.beta1)
 
         self.g_opt = optimizer.minimize(self.g_loss, var_list=self.generator.var_list)
         self.c_opt = optimizer.minimize(self.c_loss, var_list=self.critic_x.var_list)
@@ -227,11 +228,10 @@ class Trainer(object):
                 os.remove("./logs/generator_train_loss.log")
 
             while not self.coord.should_stop():
-                if step > FLAGS.n_epoch:
-                    break
-
                 self.c_feed_dict[self.real_input] = next(self.dataset_generator)
                 step = self.sess.run(self.step)
+                if step > FLAGS.n_epoch:
+                    break
 
                 n_c_iters = (FLAGS.n_c_iters_under_begining_init_step
                              if step < FLAGS.begining_init_step
@@ -247,7 +247,7 @@ class Trainer(object):
                 print("Generator - epoch : {}, loss: {}".format(step, g_fetch_dict["loss"]))
 
                 # NOTE : if(step % 100 == 0): # /100
-                scipy.misc.imsave("./{}.png".format(int(step)), g_fetch_dict["G_z"][0])
+                scipy.misc.imsave("./op_img/{}.png".format(int(step)), g_fetch_dict["G_z"][0])
                 self.summary_writer.add_summary(c_fetch_dict["summary"], c_fetch_dict["step"])
                 self.summary_writer.add_summary(g_fetch_dict["summary"], g_fetch_dict["step"])
                 self.summary_writer.flush()
