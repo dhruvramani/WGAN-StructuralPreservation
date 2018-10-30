@@ -66,7 +66,7 @@ class Critic(Model):
 
             x = slim.flatten(x)
             logits = slim.fully_connected(inputs=x, num_outputs=1, activation_fn=None)
-            classification = sigmoid(logits)
+            classification = tf.nn.sigmoid(logits)
 
             self.output_tensor = logits
             self.var_list = tf.contrib.framework.get_variables(vs)
