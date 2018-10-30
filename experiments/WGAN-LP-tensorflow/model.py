@@ -1,6 +1,6 @@
 import tensorflow as tf
 from typing import Callable
-from operations import *
+from .operations import *
 
 slim = tf.contrib.slim
 
