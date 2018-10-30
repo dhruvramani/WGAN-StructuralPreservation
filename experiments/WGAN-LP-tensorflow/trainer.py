@@ -277,6 +277,7 @@ class Trainer(object):
         self.summary_writer.flush()
 
     def train(self):
+        print("train reached")
         try:
             c_fetch_dict = None
             print("[.] Learning Start...")
@@ -298,7 +299,7 @@ class Trainer(object):
                 g_fetch_dict = self.sess.run(self.g_update_fetch_dict)
 
                 # NOTE : if(step % 100 == 0): # /100
-                scipy.misc.imsave("{}.png".format(int(step)), g_fetch_dict["G_z"])
+                scipy.misc.imsave("./{}.png".format(int(step)), g_fetch_dict["G_z"])
                 self.summary_writer.add_summary(c_fetch_dict["summary"], c_fetch_dict["step"])
                 self.summary_writer.add_summary(g_fetch_dict["summary"], g_fetch_dict["step"])
                 self.summary_writer.flush()
