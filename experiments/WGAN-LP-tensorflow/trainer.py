@@ -293,11 +293,9 @@ class Trainer(object):
                 n_c_iters = (FLAGS.n_c_iters_under_begining_init_step
                              if step < FLAGS.begining_init_step
                              else FLAGS.n_c_iters_over_begining_init_step)
-                print(n_c_iters)
-                print(self.c_feed_dict[self.real_input].shape)
+
                 for _ in range(n_c_iters):
                     c_fetch_dict = self.sess.run(self.c_update_fetch_dict, feed_dict=self.c_feed_dict)
-                    print(c_fetch_dict)
 
                 g_fetch_dict = self.sess.run(self.g_update_fetch_dict)
 
