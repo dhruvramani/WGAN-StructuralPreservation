@@ -16,11 +16,11 @@ def reshape(inputs, shape):
     return tf.reshape(inputs, shape)
 
 def conv2dtr(inputs, filters, strides=2):
-    return tf.contrib.slim.conv2d_transpose(inputs, filters, 5, strides=strides, padding='SAME',
+    return tf.contrib.slim.conv2d_transpose(inputs, filters, 5, stride=strides, padding='SAME',
         weights_initializer=tf.truncated_normal_initializer(stddev=0.02),
         bias_initializer=tf.constant_initializer(0.0))
 
 def conv2d(inputs, filters, strides=2):
-    return tf.contrib.slim.conv2d(inputs, filters, 5, strides=strides, padding='SAME',
+    return tf.contrib.slim.conv2d(inputs, filters, 5, stride=strides, padding='SAME',
         weights_initializer=tf.truncated_normal_initializer(stddev=0.02),
         bias_initializer=tf.constant_initializer(0.0))
