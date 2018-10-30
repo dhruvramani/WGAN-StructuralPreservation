@@ -68,6 +68,7 @@ def get_regularization_term(training_samples, generated_samples,
                             reg_type, per_type,
                             critic_variable_scope_name,
                             dragan_parameter_C=0.5):
+    print("reg loss reached")
     x_hat = get_perbatuation_samples(training_samples, generated_samples, per_type,
                                      dragan_parameter_C)
 

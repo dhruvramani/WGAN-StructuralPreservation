@@ -214,6 +214,7 @@ class Trainer(object):
             self.real_input: None
         }
 
+    '''
     def draw_level_sets(self, step,
                         x_min=-2.5, x_max=2.5,
                         y_min=-2.5, y_max=2.5,
@@ -275,6 +276,7 @@ class Trainer(object):
         emd_fetch = self.sess.run(self.emd_summary, feed_dict={self.emd_placeholder: emd})
         self.summary_writer.add_summary(emd_fetch, step)
         self.summary_writer.flush()
+    '''
 
     def train(self):
         try:
@@ -292,7 +294,7 @@ class Trainer(object):
                              if step < FLAGS.begining_init_step
                              else FLAGS.n_c_iters_over_begining_init_step)
                 print(n_c_iters)
-                print(self.c_feed_dict[self.real_input])
+                print(self.c_feed_dict[self.real_input].shape)
                 for _ in range(n_c_iters):
                     c_fetch_dict = self.sess.run(self.c_update_fetch_dict, feed_dict=self.c_feed_dict)
                     print(c_fetch_dict)
@@ -305,11 +307,13 @@ class Trainer(object):
                 self.summary_writer.add_summary(g_fetch_dict["summary"], g_fetch_dict["step"])
                 self.summary_writer.flush()
 
+                '''
                 if step in __eval_step_list__:
                     self.draw_level_sets(step)
 
                 if FLAGS.emd_records and step % FLAGS.interval_record_earth_mover == 0 and step != 0:
                     self.estimate_earth_mover_distance(step)
+                ''' 
 
                 self.sess.run(self.step_inc)
 
