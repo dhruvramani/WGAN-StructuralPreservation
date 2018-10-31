@@ -131,7 +131,7 @@ class Trainer(object):
                                                 critic_variable_scope_name=FLAGS.critic_variable_scope_name
                                                 )
 
-        self.c_loss = self.c_negative_loss + FLAGS.Lambda * self.c_regularization_loss
+        self.c_loss = - self.c_negative_loss + FLAGS.Lambda * self.c_regularization_loss # NOTE : Changed to negative
 
     def define_optim(self):
         self.step = tf.Variable(0, name='step', trainable=False)
