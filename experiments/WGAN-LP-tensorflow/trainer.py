@@ -16,7 +16,7 @@ __eval_step_list__ = [10, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 15000, 200
 
 flags = tf.app.flags
 flags.DEFINE_integer("n_epoch", 50, "Epoch to train [20000]") # TODO Change
-flags.DEFINE_integer("n_batch_size", 256, "Batch size to train [256]")
+flags.DEFINE_integer("n_batch_size", 100, "Batch size to train [256]")
 flags.DEFINE_integer("latent_dimensionality", 128, "Dimensionality of the latent variables [2]")
 
 """
@@ -33,7 +33,7 @@ flags.DEFINE_integer("interval_record_earth_mover", 10, "[10]")
 
 flags.DEFINE_float("learning_rate", 5e-5, "Learning rate of optimizer [5e-5]")
 flags.DEFINE_float("Lambda", 5., "Weights for critics' regularization term [5]")
-flags.DEFINE_string("Regularization_type", "no_reg", "[no_reg, no_reg_but_clipping, LP, GP]")
+flags.DEFINE_string("Regularization_type", "LP", "[no_reg, no_reg_but_clipping, LP, GP]")
 flags.DEFINE_string("Purturbation_type", "dragan_only_training",
                     "[no_purf, wgan_gp, dragan_only_training, dragan_both]")
 flags.DEFINE_string("dataset", 'GeneratorSwissRoll',
@@ -117,8 +117,8 @@ class Trainer(object):
                                 reuse=True)
 
     def define_loss(self):
-        self.g_loss = -tf.reduce_mean(self.critic_gz.output_tensor)
-        self.c_negative_loss = -self.g_loss - tf.reduce_mean(self.critic_x.output_tensor)
+        self.g_loss = tf.reduce_mean(self.critic_gz.output_tensor)
+        self.c_negative_loss = self.g_loss + tf.reduce_mean(self.critic_x.output_tensor)
         if FLAGS.Regularization_type == 'no_reg_but_clipping' or \
            FLAGS.Regularization_type == 'no_reg':
             self.c_regularization_loss = tf.Variable(0., trainable=False)
@@ -131,7 +131,7 @@ class Trainer(object):
                                                 critic_variable_scope_name=FLAGS.critic_variable_scope_name
                                                 )
 
-        self.c_loss = - self.c_negative_loss + FLAGS.Lambda * self.c_regularization_loss # NOTE : Changed to negative
+        self.c_loss =  self.c_negative_loss + FLAGS.Lambda * self.c_regularization_loss # NOTE : Changed to negative
 
     def define_optim(self):
         self.step = tf.Variable(0, name='step', trainable=False)
