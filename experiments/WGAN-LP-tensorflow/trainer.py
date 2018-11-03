@@ -31,7 +31,7 @@ flags.DEFINE_integer("n_c_iters_under_begining_init_step", 100, "[100]")
 flags.DEFINE_integer("n_c_iters_over_begining_init_step", 10, "[10]")
 flags.DEFINE_integer("interval_record_earth_mover", 10, "[10]")
 
-flags.DEFINE_float("learning_rate", 5e-5, "Learning rate of optimizer [5e-5]")
+flags.DEFINE_float("learning_rate", 5e-7, "Learning rate of optimizer [5e-5]")
 flags.DEFINE_float("Lambda", 5., "Weights for critics' regularization term [5]")
 flags.DEFINE_string("Regularization_type", "LP", "[no_reg, no_reg_but_clipping, LP, GP]")
 flags.DEFINE_string("Purturbation_type", "dragan_only_training",
