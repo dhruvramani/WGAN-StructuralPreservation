@@ -118,7 +118,7 @@ class Trainer(object):
 
     def define_loss(self):
         self.g_loss = tf.reduce_mean(self.critic_gz.output_tensor)
-        self.c_negative_loss = self.g_loss + tf.reduce_mean(self.critic_x.output_tensor)
+        self.c_negative_loss = - self.g_loss + tf.reduce_mean(self.critic_x.output_tensor)
         if FLAGS.Regularization_type == 'no_reg_but_clipping' or \
            FLAGS.Regularization_type == 'no_reg':
             self.c_regularization_loss = tf.Variable(0., trainable=False)
@@ -131,7 +131,7 @@ class Trainer(object):
                                                 critic_variable_scope_name=FLAGS.critic_variable_scope_name
                                                 )
 
-        self.c_loss =  self.c_negative_loss + FLAGS.Lambda * self.c_regularization_loss # NOTE : Changed to negative
+        self.c_loss = - self.c_negative_loss + FLAGS.Lambda * self.c_regularization_loss # NOTE : Changed to negative
 
     def define_optim(self):
         self.step = tf.Variable(0, name='step', trainable=False)
