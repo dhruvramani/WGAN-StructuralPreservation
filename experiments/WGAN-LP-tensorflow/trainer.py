@@ -236,7 +236,7 @@ class Trainer(object):
                              if step < FLAGS.begining_init_step
                              else FLAGS.n_c_iters_over_begining_init_step)
 
-                scipy.misc.imsave("./op_img/curr_img.png", self.c_feed_dict[self.real_input])
+                scipy.misc.imsave("./op_img/curr_img.png", self.c_feed_dict[self.real_input][0])
 
                 c_fetch_dict = None
                 for i in range(n_c_iters):
