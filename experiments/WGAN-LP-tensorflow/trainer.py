@@ -31,7 +31,7 @@ flags.DEFINE_integer("n_c_iters_under_begining_init_step", 100, "[100]")
 flags.DEFINE_integer("n_c_iters_over_begining_init_step", 10, "[10]")
 flags.DEFINE_integer("interval_record_earth_mover", 10, "[10]")
 
-flags.DEFINE_float("learning_rate", 5e-7, "Learning rate of optimizer [5e-5]")
+flags.DEFINE_float("learning_rate", 0.0002, "Learning rate of optimizer [5e-5]")
 flags.DEFINE_float("Lambda", 5., "Weights for critics' regularization term [5]")
 flags.DEFINE_string("Regularization_type", "LP", "[no_reg, no_reg_but_clipping, LP, GP]")
 flags.DEFINE_string("Purturbation_type", "dragan_only_training",
@@ -137,7 +137,7 @@ class Trainer(object):
         self.step = tf.Variable(0, name='step', trainable=False)
         self.step_inc = tf.assign(self.step, self.step + 1)
 
-        optimizer = tf.train.RMSPropOptimizer(FLAGS.learning_rate)
+        optimizer = tf.train.AdamOptimizer(learning_rate=FLAGS.learning_rate, beta1=0.5, beta2=0.999)
 
         self.g_opt = optimizer.minimize(self.g_loss, var_list=self.generator.var_list)
         self.c_opt = optimizer.minimize(self.c_loss, var_list=self.critic_x.var_list)
