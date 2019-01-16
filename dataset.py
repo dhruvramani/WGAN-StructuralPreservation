@@ -78,3 +78,4 @@ if __name__ == '__main__':
     dataloader = augument_data(23)
     for x in enumerate(dataloader):
         print(x)
+        break
