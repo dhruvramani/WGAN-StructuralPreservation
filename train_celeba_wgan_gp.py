@@ -122,9 +122,9 @@ def train_wgan(train_a=False):
 
     criterion = torch.nn.CrossEntropyLoss()
     start_epoch = 0
+    ckpt_dir = './checkpoints/celeba_wgan_gp'
+    utils.mkdir(ckpt_dir)
     if(args.resume):
-        ckpt_dir = './checkpoints/celeba_wgan_gp'
-        utils.mkdir(ckpt_dir)
         try:
             ckpt = utils.load_checkpoint(ckpt_dir)
             start_epoch = ckpt['epoch']
