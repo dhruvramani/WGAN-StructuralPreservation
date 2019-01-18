@@ -100,8 +100,8 @@ def train_aesthecity():
             with open("../save/aes/logs/train_loss.log", "a+") as lfile:
                 lfile.write("{}\n".format(tl))
 
-            progress_bar(i, len(dataloader), 'Loss: {}, F1s: {} '.format(tl, accu))
-        print('=> Network : Epoch [{}/{}], Loss:{:.4f}, F1:{:.4f}'.format(epoch + 1, args.epochs, train_loss / le, accu1 / le))
+            progress_bar(i, len(dataloader), 'Loss: {}, Accuracy: {} '.format(tl, accu))
+        print('=> Network : Epoch [{}/{}], Loss:{:.4f}, Accuracy:{:.4f}'.format(epoch + 1, args.epochs, train_loss / le, accu1 / le))
         old_best = best_acc
         best_acc = max(best_acc, accu1/le)
         if(best_acc != old_best):
@@ -199,7 +199,7 @@ def train_wgan(train_a=False):
                                    {"g_loss": g_loss.data.cpu().numpy()},
                                    global_step=step)
 
-                print("Epoch: (%3d) (%5d/%5d) - D Loss : (%d) - G Loss : (%d)" % (epoch, i + 1, len(data_loader), d_loss.data.cpu().numpy(), g_loss.data.cpu().numpy()), end="\r")
+                print("Epoch: ({}) ({}/{}) - D Loss : {:.4f} - G Loss : {:.4f}".format(epoch, i + 1, len(data_loader), d_loss.data.cpu().numpy(), g_loss.data.cpu().numpy()), end="\r")
 
             if (i + 1) % 100 == 0:
                 G.eval()
@@ -210,7 +210,7 @@ def train_wgan(train_a=False):
                 torchvision.utils.save_image(f_imgs_sample, '%s/Epoch_(%d)_(%dof%d).jpg' % (save_dir, epoch, i + 1, len(data_loader)), nrow=10)
 
 
-        print("Epoch {} - D Loss : {} - G Loss : {}".format(epoch, int(dl / d_count), int(gl / g_count)))
+        print("Epoch {} - D Loss : {:.4f} - G Loss : {:.4f}".format(epoch, int(dl / d_count), int(gl / g_count)))
         utils.save_checkpoint({'epoch': epoch + 1, 'D': D.state_dict(), 'G': G.state_dict(), 'd_optimizer': d_optimizer.state_dict(), 'g_optimizer': g_optimizer.state_dict()}, '%s/Epoch_(%d).ckpt' % (ckpt_dir, epoch + 1), max_keep=2)
 
 
