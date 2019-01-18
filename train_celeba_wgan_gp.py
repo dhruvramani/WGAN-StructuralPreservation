@@ -23,14 +23,20 @@ gpu_id = [2]
 utils.cuda_devices(gpu_id)
 
 parser = argparse.ArgumentParser(description='PyTorch Facial Structural Preservation WGAN')
-parser.add_argument('--args', default=0.0002, type=float, help='learning rate') 
+parser.add_argument('--lr', default=0.0002, type=float, help='learning rate') 
 parser.add_argument('--batch_size', default=64, type=int)
 parser.add_argument('--resume', '-r', type=int, default=0, help='resume from checkpoint')
 parser.add_argument('--epochs', '-e', type=int, default=50, help='number of args.epochs to train.')
 parser.add_argument('--n_critic', default=5, type=int, help="traing generator in these many args.epochs as compared to critic")
 parser.add_argument('--z_dim', default=100, type=int)
 
+parser.add_argument('--alr', default=0.001, type=float, help="learning rate for classifier")
+parser.add_argument('--aresume', '-ar', type=int, default=0, help='resume classifier from checkpoint')
+
 args = parser.parse_args()
+net = models.AsthecitiyClassifier()
+D = models.DiscriminatorWGANGP(3)
+G = models.Generator(args.z_dim)
 
 def gradient_penalty(x, y, f):
     # interpolation
@@ -47,21 +53,75 @@ def gradient_penalty(x, y, f):
     return gp
 
 def train_aesthecity():
+    global net
+    sepoch, step, best_acc = 0, 0, 0
+    if(args.aresume):
+        if(os.path.isfile('../save/aes/network.ckpt')):
+            net.load_state_dict(torch.load('../save/aes/network.ckpt'))
+        print('==> Network : loaded')
+
+        if(os.path.isfile("../save/aes/info.txt")):
+            with open("../save/aes/info.txt", "r") as f:
+                sepoch, step = (int(i) for i in str(f.read()).split(" "))
+            print("=> Network : prev epoch found")
+    else :
+        with open("../save/aes/logs/train_loss.log", "w+") as f:
+            pass
+
+    data_loader = iter(augument_data())
+    le = len(dataloader) - 1
+    
+    params = net.parameters()     
+    optimizer = torch.optim.Adam(params, lr=args.alr) 
+    criterion = torch.nn.CrossEntropyLoss()
+    
+    for epoch in range(sepoch, args.epochs):
+        train_loss, accu1 = 0.0, 0.0
+        for _ in range(step, le):
+            imgs, labels = next(dataloader)
+            optimizer.zero_grad()
+            predictions = net(imgs)
+            loss = criterion(predictions, labels)
+            loss.backward()
+            
+            tl = loss.item()
+            train_loss += tl
+            pred = torch.max(predictions, 1)[0].type(torch.LongTensor)
+            accu = (pred == labels).sum().item()
+            accu1 += accu
+
+            gc.collect()
+            torch.cuda.empty_cache()
+
+            torch.save(net.state_dict(), '../save/aes/network.ckpt')
+            with open("../save/aes/info.txt", "w+") as f:
+                f.write("{} {}".format(epoch, i))
+
+            with open("../save/aes/logs/train_loss.log", "a+") as lfile:
+                lfile.write("{}\n".format(tl))
+
+            progress_bar(i, len(dataloader), 'Loss: {}, F1s: {} '.format(tl, accu))
+        print('=> Network : Epoch [{}/{}], Loss:{:.4f}, F1:{:.4f}'.format(epoch + 1, args.epochs, train_loss / le, accu1 / le))
+        old_best = best_acc
+        best_acc = max(best_acc, accu1/le)
+        if(best_acc != old_best):
+            torch.save(net.state_dict(), '../save/aes/best.ckpt')
+        print("Best Metrics : {}".format(best_acc))
 
 
-def train_wgan():
-    """ data """
+def train_wgan(train_a=False):
+    global G
+    global D
+    global net
+
     data_loader = gan_data(args.batch_size)
-
-    """ model """
-    D = models.DiscriminatorWGANGP(3)
-    G = models.Generator(args.z_dim)
     utils.cuda([D, G])
 
     d_optimizer = torch.optim.Adam(D.parameters(), lr=args.lr, betas=(0.5, 0.999))
     g_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(0.5, 0.999))
 
-    """ load checkpoint """
+    criterion = torch.nn.CrossEntropyLoss()
+
     if(args.resume):
         ckpt_dir = './checkpoints/celeba_wgan_gp'
         utils.mkdir(ckpt_dir)
@@ -77,8 +137,6 @@ def train_wgan():
             print(' [*] No checkpoint!')
             start_epoch = 0
 
-
-    """ run """
     writer = tensorboardX.SummaryWriter('./summaries/celeba_wgan_gp')
 
     z_sample = Variable(torch.randn(100, args.z_dim))
@@ -104,10 +162,17 @@ def train_wgan():
             # train D
             r_logit = D(imgs)            # f(x)
             f_logit = D(f_imgs.detach()) # f(G(z))
+            if(train_a):
+                a = net(f_imgs.detach())
+                targets = torch.ones(a.shape[0]).type(torch.LongTensor).to(device)
+                al = criterion(a, targets)
 
             wd = r_logit.mean() - f_logit.mean()  # Wasserstein-1 Distance 
             gp = gradient_penalty(imgs.data, f_imgs.data, D)
-            d_loss = -wd + gp * 10.0
+            d_loss = -wd + gp * 10.0 
+
+            if(train_a):
+                d_loss += al
 
             D.zero_grad()
             d_loss.backward()
@@ -147,3 +212,8 @@ def train_wgan():
 
         print("Epoch {} - D Loss : {} - G Loss : {}".format(epoch, int(dl / d_count), int(gl / g_count)))
         utils.save_checkpoint({'epoch': epoch + 1, 'D': D.state_dict(), 'G': G.state_dict(), 'd_optimizer': d_optimizer.state_dict(), 'g_optimizer': g_optimizer.state_dict()}, '%s/Epoch_(%d).ckpt' % (ckpt_dir, epoch + 1), max_keep=2)
+
+
+if __name__ == '__main__':
+    # train_aesthecity()
+    train_wgan() #train_a=True)
