@@ -178,6 +178,7 @@ def train_wgan(train_a=False):
             d_loss.backward()
             d_optimizer.step()
             dl += d_loss.data.cpu().numpy()
+            d_count += 1
 
             writer.add_scalar('D/wd', wd.data.cpu().numpy(), global_step=step)
             writer.add_scalar('D/gp', gp.data.cpu().numpy(), global_step=step)
