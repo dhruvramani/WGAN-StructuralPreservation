@@ -4,6 +4,7 @@ import Augmentor
 import numpy as np
 import torch.nn as nn
 import torchvision.datasets as dsets
+import torchvision.transforms as transforms
 from torch.utils.data import Dataset, DataLoader
 
 _DATASET_PATH = '/home/nevronas/dataset/img_align_celeba'
