@@ -121,7 +121,7 @@ def train_wgan(train_a=False):
     g_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(0.5, 0.999))
 
     criterion = torch.nn.CrossEntropyLoss()
-
+    start_epoch = 0
     if(args.resume):
         ckpt_dir = './checkpoints/celeba_wgan_gp'
         utils.mkdir(ckpt_dir)
