@@ -56,16 +56,16 @@ def train_aesthecity():
     global net
     sepoch, step, best_acc = 0, 0, 0
     if(args.aresume):
-        if(os.path.isfile('../save/aes/network.ckpt')):
-            net.load_state_dict(torch.load('../save/aes/network.ckpt'))
+        if(os.path.isfile('./save/aes/network.ckpt')):
+            net.load_state_dict(torch.load('./save/aes/network.ckpt'))
         print('==> Network : loaded')
 
-        if(os.path.isfile("../save/aes/info.txt")):
-            with open("../save/aes/info.txt", "r") as f:
+        if(os.path.isfile("./save/aes/info.txt")):
+            with open("./save/aes/info.txt", "r") as f:
                 sepoch, step = (int(i) for i in str(f.read()).split(" "))
             print("=> Network : prev epoch found")
     else :
-        with open("../save/aes/logs/train_loss.log", "w+") as f:
+        with open("./save/aes/logs/train_loss.log", "w+") as f:
             pass
 
     data_loader = iter(augument_data())
@@ -93,11 +93,11 @@ def train_aesthecity():
             gc.collect()
             torch.cuda.empty_cache()
 
-            torch.save(net.state_dict(), '../save/aes/network.ckpt')
-            with open("../save/aes/info.txt", "w+") as f:
+            torch.save(net.state_dict(), './save/aes/network.ckpt')
+            with open("./save/aes/info.txt", "w+") as f:
                 f.write("{} {}".format(epoch, i))
 
-            with open("../save/aes/logs/train_loss.log", "a+") as lfile:
+            with open("./save/aes/logs/train_loss.log", "a+") as lfile:
                 lfile.write("{}\n".format(tl))
 
             progress_bar(i, len(dataloader), 'Loss: {}, Accuracy: {} '.format(tl, accu))
@@ -105,7 +105,7 @@ def train_aesthecity():
         old_best = best_acc
         best_acc = max(best_acc, accu1/le)
         if(best_acc != old_best):
-            torch.save(net.state_dict(), '../save/aes/best.ckpt')
+            torch.save(net.state_dict(), './save/aes/best.ckpt')
         print("Best Metrics : {}".format(best_acc))
 
 
