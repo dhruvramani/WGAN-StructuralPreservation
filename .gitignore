@@ -3,6 +3,10 @@ dataset/WGAN-LP-tensorflow/dataset
 experiments/
 experiments/GANs/data/
 
+checkpoints/
+sample_images_while_training/
+summaries/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
