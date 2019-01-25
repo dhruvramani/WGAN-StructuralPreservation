@@ -68,7 +68,7 @@ def train_aesthecity():
         with open("./save/aes/logs/train_loss.log", "w+") as f:
             pass
 
-    data_loader = iter(augument_data(args.batch_size))
+    dataloader = iter(augument_data(args.batch_size))
     le = len(dataloader) - 1
     
     params = net.parameters()     
