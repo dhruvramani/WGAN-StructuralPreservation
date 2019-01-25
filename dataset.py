@@ -70,7 +70,8 @@ class AugumentedDataset(Dataset):
     def __getitem__(self, idx):
         real_img = self.real_data.__getitem__(idx)[0]
         real_np = np.array(real_img)
-        fake_img = torch.Tensor(self.earser(real_np))
+        fake_img = self.earser(real_np)
+        fake_img = torch.Tensor(fake_img)
 
         return torch.stack((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
 
