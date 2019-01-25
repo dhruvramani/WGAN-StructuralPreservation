@@ -61,7 +61,7 @@ def gan_data(batch_size):
 class AugumentedDataset(Dataset):
     def __init__(self, path=_DATASET_PATH):
         self.path = path
-        self.earser = get_random_eraser
+        self.earser = get_random_eraser()
         self.real_data = dsets.ImageFolder(self.path)
 
     def __len__(self):
@@ -70,8 +70,7 @@ class AugumentedDataset(Dataset):
     def __getitem__(self, idx):
         real_img = self.real_data.__getitem__(idx)[0]
         real_np = np.array(real_img)
-        fake_img = self.earser(real_np)
-        fake_img = torch.Tensor(fake_img)
+        fake_img = torch.Tensor(self.earser(real_np))
 
         return torch.stack((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
 
