@@ -72,6 +72,8 @@ class AugumentedDataset(Dataset):
         real_np = np.array(real_img)
         fake_img = torch.Tensor(self.earser(real_np))
 
+        print(real_img, fake_img)
+
         return torch.stack((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
 
 def augument_data(batch_size):
