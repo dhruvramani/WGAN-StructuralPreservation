@@ -62,7 +62,7 @@ class AugumentedDataset(Dataset):
     def __init__(self, path=_DATASET_PATH):
         self.path = path
         self.earser = get_random_eraser
-        self.real_data = dsets.ImageFolder(_DATASET_PATH)
+        self.real_data = dsets.ImageFolder(self.path)
 
     def __len__(self):
         return int(self.real_data.__len__())
