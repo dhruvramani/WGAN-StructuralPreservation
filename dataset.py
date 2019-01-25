@@ -73,11 +73,7 @@ class AugumentedDataset(Dataset):
         fake_img = torch.Tensor(self.earser(real_np))
         real_img = torch.Tensor(real_np)
 
-        print(type(real_img), type(fake_img))
-        s = torch.stack((real_img, fake_img))
-        l = torch.Tensor([1, 0]).type(torch.LongTensor)
-
-        return s, l
+        return torch.stack((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
 
 def augument_data(batch_size):
     celeba_dataset = AugumentedDataset()
@@ -87,5 +83,5 @@ def augument_data(batch_size):
 if __name__ == '__main__':
     dataloader = augument_data(23)
     for x in enumerate(dataloader):
-        print(x)
+        print(type(x))
         break
