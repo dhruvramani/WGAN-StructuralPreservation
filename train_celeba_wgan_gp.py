@@ -24,7 +24,7 @@ utils.cuda_devices(gpu_id)
 
 parser = argparse.ArgumentParser(description='PyTorch Facial Structural Preservation WGAN')
 parser.add_argument('--lr', default=0.0002, type=float, help='learning rate') 
-parser.add_argument('--batch_size', default=32, type=int)
+parser.add_argument('--batch_size', default=24, type=int)
 parser.add_argument('--resume', '-r', type=int, default=0, help='resume from checkpoint')
 parser.add_argument('--epochs', '-e', type=int, default=50, help='number of args.epochs to train.')
 parser.add_argument('--n_critic', default=5, type=int, help="traing generator in these many args.epochs as compared to critic")
