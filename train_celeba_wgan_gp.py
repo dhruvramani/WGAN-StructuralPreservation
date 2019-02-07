@@ -75,7 +75,7 @@ def train_aesthecity():
     
     params = net.parameters()     
     optimizer = torch.optim.Adam(params, lr=args.alr) 
-    criterion = torch.nn.BCELoss()
+    bce = torch.nn.BCELoss()
     
     for epoch in range(sepoch, args.epochs):
         train_loss, accu1 = 0.0, 0.0
@@ -85,7 +85,7 @@ def train_aesthecity():
             imgs = imgs.permute(0, 3, 1, 2)
             optimizer.zero_grad()
             predictions = net(imgs)
-            loss = criterion(predictions, labels)
+            loss = bce(predictions, labels)
             loss.backward()
             
             tl = loss.item()
@@ -117,13 +117,20 @@ def train_wgan(train_a=False):
     global D
     global net
 
+    if(train_a):
+        if(os.path.isfile('./save/aes/best.ckpt')):
+            net.load_state_dict(torch.load('./save/aes/best.ckpt'))
+        elif(os.path.isfile('./save/aes/network.ckpt')):
+            net.load_state_dict(torch.load('./save/aes/network.ckpt'))
+        
     data_loader = gan_data(args.batch_size)
     utils.cuda([D, G])
 
     d_optimizer = torch.optim.Adam(D.parameters(), lr=args.lr, betas=(0.5, 0.999))
     g_optimizer = torch.optim.Adam(G.parameters(), lr=args.lr, betas=(0.5, 0.999))
 
-    criterion = torch.nn.CrossEntropyLoss()
+    criterion, bce = torch.nn.CrossEntropyLoss(), torch.nn.BCELoss()
+    al = 0
     start_epoch = 0
     ckpt_dir = './checkpoints/celeba_wgan_gp'
     utils.mkdir(ckpt_dir)
@@ -167,8 +174,9 @@ def train_wgan(train_a=False):
             f_logit = D(f_imgs.detach()) # f(G(z))
             if(train_a):
                 a = net(f_imgs.detach())
-                targets = torch.ones(a.shape[0]).type(torch.LongTensor).to(device)
-                al = criterion(a, targets)
+                targets = torch.zeros(a.shape[0], 2).to(device)
+                targets[:, 0] = 1
+                al = bce(a, targets)
 
             wd = r_logit.mean() - f_logit.mean()  # Wasserstein-1 Distance 
             gp = gradient_penalty(imgs.data, f_imgs.data, D)
