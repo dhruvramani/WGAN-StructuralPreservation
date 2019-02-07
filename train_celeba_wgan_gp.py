@@ -24,7 +24,7 @@ utils.cuda_devices(gpu_id)
 
 parser = argparse.ArgumentParser(description='PyTorch Facial Structural Preservation WGAN')
 parser.add_argument('--lr', default=0.0002, type=float, help='learning rate') 
-parser.add_argument('--batch_size', default=64, type=int)
+parser.add_argument('--batch_size', default=32, type=int)
 parser.add_argument('--resume', '-r', type=int, default=0, help='resume from checkpoint')
 parser.add_argument('--epochs', '-e', type=int, default=50, help='number of args.epochs to train.')
 parser.add_argument('--n_critic', default=5, type=int, help="traing generator in these many args.epochs as compared to critic")
@@ -79,10 +79,7 @@ def train_aesthecity():
         train_loss, accu1 = 0.0, 0.0
         for _ in range(step, le):
             real_img, label1, fake_img, label0 = next(dataloader)
-            print(real_img.shape, fake_img.shape)
             imgs, labels = torch.cat((real_img, fake_img)), torch.cat((label1, label0))
-            print(imgs.shape, labels.shape)
-            _ = input()
             optimizer.zero_grad()
             predictions = net(imgs)
             loss = criterion(predictions, labels)
