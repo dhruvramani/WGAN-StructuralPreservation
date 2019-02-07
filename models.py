@@ -132,7 +132,8 @@ class AsthecitiyClassifier(nn.Module):
             nn.Linear(128 * 25 *20, 256),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(256, num_classes)
+            nn.Linear(256, num_classes),
+            nn.Sigmoid()
         )
 
     def forward(self, x):
