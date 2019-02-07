@@ -14,6 +14,7 @@ import torchvision
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
 import utils
+from utils import progress_bar
 
 from dataset import *
 
