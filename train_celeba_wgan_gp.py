@@ -80,6 +80,8 @@ def train_aesthecity():
         for _ in range(step, le):
             real_img, label1, fake_img, label0 = next(dataloader)
             imgs, labels = torch.stack((real_img, fake_img)), torch.stack((label1, label0))
+            print(imgs.shape)
+            _ = input()
             optimizer.zero_grad()
             predictions = net(imgs)
             loss = criterion(predictions, labels)
