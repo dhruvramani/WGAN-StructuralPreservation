@@ -80,7 +80,7 @@ def train_aesthecity():
         for _ in range(step, le):
             real_img, label1, fake_img, label0 = next(dataloader)
             imgs, labels = torch.cat((real_img, fake_img)), torch.cat((label1, label0))
-            imgs.permute(0, 3, 1, 2)
+            imgs = imgs.permute(0, 3, 1, 2)
             print(imgs.shape)
             optimizer.zero_grad()
             predictions = net(imgs)
