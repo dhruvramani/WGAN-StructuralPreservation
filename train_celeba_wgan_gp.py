@@ -89,7 +89,8 @@ def train_aesthecity():
             tl = loss.item()
             train_loss += tl
             pred = torch.max(predictions, 1)
-            accu = (pred == torch.max(labels), 1).sum().item()
+            print(pred.shape)
+            accu = (pred == torch.max(labels, 1)).sum().item()
             accu1 += accu
 
             gc.collect()
