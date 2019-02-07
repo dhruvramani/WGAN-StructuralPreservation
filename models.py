@@ -129,7 +129,7 @@ class AsthecitiyClassifier(nn.Module):
             nn.BatchNorm2d(128),
         )
         self.classifier = nn.Sequential(
-            nn.Linear(48*23296, 256),
+            nn.Linear(128 * 25 *20, 256),
             nn.ReLU(inplace=True),
             nn.Dropout(),
             nn.Linear(256, num_classes)
@@ -137,8 +137,6 @@ class AsthecitiyClassifier(nn.Module):
 
     def forward(self, x):
         x = self.features(x)
-        print(x.shape)
-        _ = input()
-        x = x.view(x.size()[0], 48*23296)
+        x = x.view(x.size()[0], 128 * 25 * 20)
         x = self.classifier(x)
         return x
