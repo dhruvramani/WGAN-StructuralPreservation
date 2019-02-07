@@ -73,7 +73,7 @@ def train_aesthecity():
     
     params = net.parameters()     
     optimizer = torch.optim.Adam(params, lr=args.alr) 
-    criterion = torch.nn.CrossEntropyLoss()
+    criterion = torch.nn.BCELoss()
     
     for epoch in range(sepoch, args.epochs):
         train_loss, accu1 = 0.0, 0.0
@@ -81,7 +81,6 @@ def train_aesthecity():
             real_img, label1, fake_img, label0 = next(dataloader)
             imgs, labels = torch.cat((real_img, fake_img)), torch.cat((label1, label0))
             imgs = imgs.permute(0, 3, 1, 2)
-            print(labels)
             optimizer.zero_grad()
             predictions = net(imgs)
             loss = criterion(predictions, labels)
