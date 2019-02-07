@@ -76,7 +76,7 @@ class AugumentedDataset(Dataset):
 
 def augument_data(batch_size):
     celeba_dataset = AugumentedDataset()
-    data_loader = DataLoader(celeba_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
+    data_loader = DataLoader(celeba_dataset, batch_size=batch_size, shuffle=True)
     return data_loader
 
 if __name__ == '__main__':
