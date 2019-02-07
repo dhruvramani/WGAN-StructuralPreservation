@@ -78,10 +78,10 @@ def train_aesthecity():
     for epoch in range(sepoch, args.epochs):
         train_loss, accu1 = 0.0, 0.0
         for _ in range(step, le):
-            real_img, label1, fake_img, label0 = next(dataloader)
-            print(real_img.shape, fake_img.shape)
-            imgs, labels = torch.cat((real_img, fake_img)), torch.cat((label1, label0))
-            print(imgs.shape)
+            #real_img, label1, fake_img, label0 = next(dataloader)
+            #print(real_img.shape, fake_img.shape)
+            imgs, labels = next(dataloader) #torch.cat((real_img, fake_img)), torch.cat((label1, label0))
+            print(imgs.shape, labels.shape)
             _ = input()
             optimizer.zero_grad()
             predictions = net(imgs)
