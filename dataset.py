@@ -72,7 +72,7 @@ class AugumentedDataset(Dataset):
         real_np = np.array(real_img)
         fake_img = torch.Tensor(self.earser(real_np))
         real_img = torch.Tensor(real_np)
-        return torch.cat((real_img, fake_img)), torch.Tensor([[1, 0], [0, 1]]).type(torch.LongTensor) # real_img, torch.tensor([1]).type(torch.LongTensor), fake_img, torch.tensor([0]).type(torch.LongTensor) 
+        return torch.cat((real_img, fake_img)), torch.Tensor([1, 0], [0, 1]).type(torch.LongTensor) # real_img, torch.tensor([1]).type(torch.LongTensor), fake_img, torch.tensor([0]).type(torch.LongTensor) 
 
 def augument_data(batch_size):
     celeba_dataset = AugumentedDataset()
