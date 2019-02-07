@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import gc
 import models
 import argparse
 import PIL.Image as Image
@@ -88,9 +89,7 @@ def train_aesthecity():
             
             tl = loss.item()
             train_loss += tl
-            pred = torch.max(predictions, 1)[0]
-            print(pred.shape)
-            accu = (pred == torch.max(labels, 1)[0]).sum().item()
+            accu = (torch.max(predictions, 1)[0] == torch.max(labels, 1)[0]).sum().item()
             accu1 += accu
 
             gc.collect()
