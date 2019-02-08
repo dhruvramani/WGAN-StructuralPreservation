@@ -86,8 +86,9 @@ if __name__ == '__main__':
     bar = Image.fromarray(img, 'RGB')
     bar.save('./bar.png')
     bar.show()
+    '''
     eraser = get_random_eraser()
     img = eraser(img)
     img = Image.fromarray(img, 'RGB')
     img.save('./foo.png')
-    img.show()
+    img.show() '''
