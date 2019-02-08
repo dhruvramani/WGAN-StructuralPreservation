@@ -4,6 +4,8 @@ import Augmentor
 import numpy as np
 import torch.nn as nn
 import PIL.Image as Image
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
 from torch.utils.data import Dataset, DataLoader
@@ -80,11 +82,9 @@ def augument_data(batch_size):
     return data_loader
 
 if __name__ == '__main__':
-    img = Image.open("/home/nevronas/dataset/img_align_celeba/1/011001.jpg")
-    img.load()
-    img = np.asarray(img, dtype="int32")
-    bar = Image.fromarray(img, 'RGB')
-    bar.save('./bar.png')
+    img = mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg')
+    imgplot = plt.imshow(img)
+    plt.show()
     '''
     eraser = get_random_eraser()
     img = eraser(img)
