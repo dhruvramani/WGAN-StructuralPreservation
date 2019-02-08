@@ -83,8 +83,7 @@ def augument_data(batch_size):
 
 if __name__ == '__main__':
     img = mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg')
-    imgplot = plt.imshow(img)
-    plt.show()
+    mpimg.imsave("./out.png", img)
     '''
     eraser = get_random_eraser()
     img = eraser(img)
