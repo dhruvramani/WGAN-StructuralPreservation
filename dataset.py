@@ -80,7 +80,11 @@ def augument_data(batch_size):
     return data_loader
 
 if __name__ == '__main__':
-    dataloader = augument_data(23)
-    for x in enumerate(dataloader):
-        print(type(x))
-        break
+    img = Image.open("/home/nevronas/dataset/img_align_celeba/1/011000.jpg")
+    img.load()
+    img = np.asarray(img, dtype="int32")
+    eraser = get_random_eraser()
+    img = eraser(img)
+    img = Image.fromarray(img, 'RGB')
+    img.save('./foo.png')
+    img.show()
