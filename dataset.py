@@ -80,7 +80,7 @@ def augument_data(batch_size):
     return data_loader
 
 if __name__ == '__main__':
-    img = Image.open("/home/nevronas/dataset/img_align_celeba/1/011000.jpg")
+    img = Image.open("/home/nevronas/dataset/img_align_celeba/1/011001.jpg")
     img.load()
     img = np.asarray(img, dtype="int32")
     bar = Image.fromarray(img, 'RGB')
