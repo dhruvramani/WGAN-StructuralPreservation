@@ -85,7 +85,6 @@ if __name__ == '__main__':
     img = np.asarray(img, dtype="int32")
     bar = Image.fromarray(img, 'RGB')
     bar.save('./bar.png')
-    bar.show()
     '''
     eraser = get_random_eraser()
     img = eraser(img)
