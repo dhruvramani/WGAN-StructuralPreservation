@@ -3,9 +3,11 @@ import torch
 import Augmentor
 import numpy as np
 import torch.nn as nn
+from skimage import io
 import PIL.Image as Image
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+from skimage import transform as tf
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
 from torch.utils.data import Dataset, DataLoader
@@ -60,6 +62,11 @@ def gan_data(batch_size):
     data_loader = DataLoader(imagenet_data, batch_size=batch_size, shuffle=True, num_workers=4)
     return data_loader
 
+def skewed_transform(image):
+    afine_tf = tf.AffineTransform(shear=0.2)
+    modified = tf.warp(image, inverse_map=afine_tf)
+    return modified
+
 class AugumentedDataset(Dataset):
     def __init__(self, path=_DATASET_PATH):
         self.path = path
@@ -72,12 +79,14 @@ class AugumentedDataset(Dataset):
     def __getitem__(self, idx):
         real_img = self.real_data.__getitem__(idx)[0]
         real_np = np.array(real_img)
-        mpimg.imsave("./out1.png", real_np)
+        #mpimg.imsave("./out1.png", real_np)
         fake_img = torch.Tensor(self.earser(real_np))
-        fake_np = np.array(fake_img)
-        mpimg.imsave("./out2.png", fake_np)
+        fake_img2 = torch.Tensor(skewed_transform(real_np))
+        #fake_np = np.array(fake_img)
+        #mpimg.imsave("./out2.png", fake_np)
         real_img = torch.Tensor(real_np)
-        return real_img, torch.tensor([1, 0]).type(torch.LongTensor), fake_img, torch.tensor([0, 1]).type(torch.LongTensor) #torch.stack((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
+        real_labels, fake_labels = torch.tensor([1, 0]).type(torch.LongTensor), torch.tensor([0, 1]).type(torch.LongTensor)
+        return real_img, real_labels, fake_img, fake_img2, fake_labels #torch.cat((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
 
 def augument_data(batch_size):
     celeba_dataset = AugumentedDataset()
@@ -87,7 +96,7 @@ def augument_data(batch_size):
 if __name__ == '__main__':
     data_loader = iter(augument_data(23))
     eal_img, label1, fake_img, label0 = next(dataloader)
-    
+
     '''
     img = mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg')
     mpimg.imsave("./out.png", img)

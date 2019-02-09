@@ -80,8 +80,8 @@ def train_aesthecity():
     for epoch in range(sepoch, args.epochs):
         train_loss, accu1 = 0.0, 0.0
         for i in range(step, le):
-            real_img, label1, fake_img, label0 = next(dataloader)
-            imgs, labels = torch.cat((real_img, fake_img)), torch.cat((label1, label0)).type(torch.FloatTensor)
+            real_img, label1, fake_img, fake_img2, label0 = next(dataloader)
+            imgs, labels = torch.cat((fake_img2, real_img, fake_img)), torch.cat((label0, label1, label0)).type(torch.FloatTensor)
             imgs = imgs.permute(0, 3, 1, 2)
             optimizer.zero_grad()
             predictions = net(imgs)
@@ -122,7 +122,7 @@ def train_wgan(train_a=False):
             net.load_state_dict(torch.load('./save/aes/best.ckpt'))
         elif(os.path.isfile('./save/aes/network.ckpt')):
             net.load_state_dict(torch.load('./save/aes/network.ckpt'))
-        
+
     data_loader = gan_data(args.batch_size)
     utils.cuda([D, G])
 
