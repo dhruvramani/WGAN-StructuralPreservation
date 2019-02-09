@@ -51,8 +51,8 @@ def gan_data(batch_size):
     transform = transforms.Compose(
         [transforms.ToTensor(),
          transforms.Lambda(crop),
-         transforms.ToPILImage(),
-         transforms.Resize(size=(re_size, re_size), interpolation=Image.BICUBIC),
+         #transforms.ToPILImage(),
+         #transforms.Resize(size=(re_size, re_size), interpolation=Image.BICUBIC),
          transforms.ToTensor(),
          transforms.Normalize(mean=[0.5] * 3, std=[0.5] * 3)])
 
@@ -72,7 +72,10 @@ class AugumentedDataset(Dataset):
     def __getitem__(self, idx):
         real_img = self.real_data.__getitem__(idx)[0]
         real_np = np.array(real_img)
+        mpimg.imsave("./out1.png", real_np)
         fake_img = torch.Tensor(self.earser(real_np))
+        fake_np = np.array(fake_img)
+        mpimg.imsave("./out2.png", fake_np)
         real_img = torch.Tensor(real_np)
         return real_img, torch.tensor([1, 0]).type(torch.LongTensor), fake_img, torch.tensor([0, 1]).type(torch.LongTensor) #torch.stack((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
 
@@ -82,9 +85,12 @@ def augument_data(batch_size):
     return data_loader
 
 if __name__ == '__main__':
+    data_loader = iter(augument_data(23))
+    eal_img, label1, fake_img, label0 = next(dataloader)
+    
+    '''
     img = mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg')
     mpimg.imsave("./out.png", img)
-    '''
     eraser = get_random_eraser()
     img = eraser(img)
     img = Image.fromarray(img, 'RGB')
