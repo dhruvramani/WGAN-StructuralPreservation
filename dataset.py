@@ -99,7 +99,7 @@ if __name__ == '__main__':
     real_img, label1, fake_img, fake_img2, label0 = next(data_loader)
     #img = np.array(mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg'))
     eraser = get_random_eraser()
-    fake_img = eraser(real_img[0])
+    fake_img = eraser(real_img[0].numpy())
     print(fake_img.shape, fake_img2.shape)
     mpimg.imsave("./out.png", real_img[0])
     mpimg.imsave("./out1.png", fake_img)
