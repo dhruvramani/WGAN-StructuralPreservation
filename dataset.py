@@ -97,14 +97,14 @@ def augument_data(batch_size):
     return data_loader
 
 if __name__ == '__main__':
-    '''
+    
     data_loader = iter(augument_data(23))
-    eal_img, label1, fake_img, label0 = next(dataloader)
-    '''
-    img = mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg')
+    real_img, label1, fake_img, fake_img2, label0 = next(dataloader)
+    #img = mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg')
     eraser = get_random_eraser()
-    foo = eraser(img)
-    mpimg.imsave("./out.png", foo)
+    #foo = eraser(fake_img)
+    mpimg.imsave("./out.png", fake_img)
+    mpimg.imsave("./out2.png", fake_img2)
     '''
     img = Image.fromarray(img, 'RGB')
     img.save('./foo.png')
