@@ -15,36 +15,6 @@ from torch.utils.data import Dataset, DataLoader
 import utils
 
 _DATASET_PATH = '/home/nevronas/dataset/img_align_celeba'
-'''
-def get_random_eraser(p=1, area_ratio_range=[0.02, 0.4], min_aspect_ratio=0.3, max_attempt=20):
-    sl, sh = area_ratio_range
-    rl, rh = min_aspect_ratio, 1. / min_aspect_ratio
-
-    def _random_erase(image):
-        image = np.asarray(image).copy()
-
-        if np.random.random() > p:
-            return image
-
-        h, w = image.shape[:2]
-        image_area = h * w
-
-        for _ in range(max_attempt):
-            mask_area = np.random.uniform(sl, sh) * image_area
-            aspect_ratio = np.random.uniform(rl, rh)
-            mask_h = int(np.sqrt(mask_area * aspect_ratio))
-            mask_w = int(np.sqrt(mask_area / aspect_ratio))
-
-            if mask_w < w and mask_h < h:
-                x0 = np.random.randint(0, w - mask_w)
-                y0 = np.random.randint(0, h - mask_h)
-                x1 = x0 + mask_w
-                y1 = y0 + mask_h
-                image[y0:y1, x0:x1] = np.random.uniform(0, 1)
-                break
-
-        return image
-    return _random_erase '''
 
 def get_random_eraser(p=1, s_l=0.02, s_h=0.4, r_1=0.3, r_2=1/0.3, v_l=0, v_h=255, pixel_level=False):
     def eraser(input_img):
@@ -112,11 +82,8 @@ class AugumentedDataset(Dataset):
     def __getitem__(self, idx):
         real_img = self.real_data.__getitem__(idx)[0]
         real_np = np.array(real_img)
-        #mpimg.imsave("./out1.png", real_np)
         fake_img = torch.Tensor(self.earser(real_np))
         fake_img2 = torch.Tensor(skewed_transform(real_np))
-        #fake_np = np.array(fake_img)
-        #mpimg.imsave("./out2.png", fake_np)
         real_img = torch.Tensor(real_np)
         real_labels, fake_labels = torch.tensor([1, 0]).type(torch.LongTensor), torch.tensor([0, 1]).type(torch.LongTensor)
         return real_img, real_labels, fake_img, fake_img2, fake_labels #torch.cat((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
@@ -128,14 +95,14 @@ def augument_data(batch_size):
 
 if __name__ == '__main__':
     
-    #data_loader = iter(augument_data(23))
-    #real_img, label1, fake_img, fake_img2, label0 = next(data_loader)
-    img = np.array(mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg'))
-    eraser = get_random_eraser()
-    fake_img = eraser(img)
+    data_loader = iter(augument_data(23))
+    real_img, label1, fake_img, fake_img2, label0 = next(data_loader)
+    #img = np.array(mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg'))
+    #eraser = get_random_eraser()
+    #fake_img = eraser(img)
 
     mpimg.imsave("./out.png", fake_img)
-    #mpimg.imsave("./out2.png", fake_img2)
+    mpimg.imsave("./out2.png", fake_img2)
     '''
     img = Image.fromarray(img, 'RGB')
     img.save('./foo.png')
