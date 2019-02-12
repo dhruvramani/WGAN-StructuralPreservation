@@ -103,8 +103,8 @@ if __name__ == '__main__':
     '''
     img = mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg')
     eraser = get_random_eraser()
-    img = eraser(img)
-    mpimg.imsave("./out.png", img)
+    foo = eraser(img)
+    mpimg.imsave("./out.png", foo)
     '''
     img = Image.fromarray(img, 'RGB')
     img.save('./foo.png')
