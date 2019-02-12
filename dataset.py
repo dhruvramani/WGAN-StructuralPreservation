@@ -16,35 +16,35 @@ import utils
 
 _DATASET_PATH = '/home/nevronas/dataset/img_align_celeba'
 
-def get_random_eraser(p=0.5, area_ratio_range=[0.02, 0.4], min_aspect_ratio=0.3, max_attempt=20):
-    sl, sh = area_ratio_range
-    rl, rh = min_aspect_ratio, 1. / min_aspect_ratio
+def get_random_eraser(p=0.5, s_l=0.02, s_h=0.4, r_1=0.3, r_2=1/0.3, v_l=0, v_h=255, pixel_level=True):
+    def eraser(input_img):
+        img_h, img_w, img_c = input_img.shape
+        p_1 = np.random.rand()
 
-    def _random_erase(image):
-        image = np.asarray(image).copy()
+        if p_1 > p:
+            return input_img
 
-        if np.random.random() > p:
-            return image
+        while True:
+            s = np.random.uniform(s_l, s_h) * img_h * img_w
+            r = np.random.uniform(r_1, r_2)
+            w = int(np.sqrt(s / r))
+            h = int(np.sqrt(s * r))
+            left = np.random.randint(0, img_w)
+            top = np.random.randint(0, img_h)
 
-        h, w = image.shape[:2]
-        image_area = h * w
-
-        for _ in range(max_attempt):
-            mask_area = np.random.uniform(sl, sh) * image_area
-            aspect_ratio = np.random.uniform(rl, rh)
-            mask_h = int(np.sqrt(mask_area * aspect_ratio))
-            mask_w = int(np.sqrt(mask_area / aspect_ratio))
-
-            if mask_w < w and mask_h < h:
-                x0 = np.random.randint(0, w - mask_w)
-                y0 = np.random.randint(0, h - mask_h)
-                x1 = x0 + mask_w
-                y1 = y0 + mask_h
-                image[y0:y1, x0:x1] = np.random.uniform(0, 1)
+            if left + w <= img_w and top + h <= img_h:
                 break
 
-        return image
-    return _random_erase
+        if pixel_level:
+            c = np.random.uniform(v_l, v_h, (h, w, img_c))
+        else:
+            c = np.random.uniform(v_l, v_h)
+
+        input_img[top:top + h, left:left + w, :] = c
+
+        return input_img
+
+    return eraser
 
 def gan_data(batch_size):
     crop_size = 108
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     #img = np.array(mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg'))
     #eraser = get_random_eraser()
     #fake_img = eraser(img)
-    fake_img = (fake_img[0]).numpy().astype(np.float32)
+    fake_img = fake_img[0] #(fake_img[0] * 255).numpy().astype(np.uint8)
     print(fake_img.shape, fake_img2.shape)
     mpimg.imsave("./out.png", real_img[0])
     mpimg.imsave("./out1.png", fake_img)
