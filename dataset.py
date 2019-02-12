@@ -16,7 +16,7 @@ import utils
 
 _DATASET_PATH = '/home/nevronas/dataset/img_align_celeba'
 
-def get_random_eraser(p=0.5, area_ratio_range=[0.02, 0.4], min_aspect_ratio=0.3, max_attempt=20):
+def get_random_eraser(p=1, area_ratio_range=[0.02, 0.4], min_aspect_ratio=0.3, max_attempt=20):
     sl, sh = area_ratio_range
     rl, rh = min_aspect_ratio, 1. / min_aspect_ratio
 
