@@ -100,7 +100,8 @@ if __name__ == '__main__':
     #img = np.array(mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg'))
     #eraser = get_random_eraser()
     #fake_img = eraser(img)
-
+    fake_img = fake_img.numpy()
+    fake_img2 = fake_img2.numpy()
     mpimg.imsave("./out.png", fake_img)
     mpimg.imsave("./out2.png", fake_img2)
     '''
