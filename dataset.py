@@ -99,7 +99,7 @@ if __name__ == '__main__':
     eal_img, label1, fake_img, label0 = next(dataloader)
     '''
     img = mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg')
-    printf(img.shape)
+    print(img.shape)
     eraser = get_random_eraser()
     img = eraser(img)
     mpimg.imsave("./out.png", img)
