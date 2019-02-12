@@ -102,9 +102,9 @@ if __name__ == '__main__':
     #fake_img = eraser(img)
     fake_img = fake_img.numpy()
     fake_img2 = fake_img2.numpy()
-    print(fake_img.shape, fake_img2.shape)
-    mpimg.imsave("./out.png", fake_img)
-    mpimg.imsave("./out2.png", fake_img2)
+    #print(fake_img.shape, fake_img2.shape)
+    mpimg.imsave("./out.png", fake_img[0])
+    mpimg.imsave("./out2.png", fake_img2[0])
     '''
     img = Image.fromarray(img, 'RGB')
     img.save('./foo.png')
