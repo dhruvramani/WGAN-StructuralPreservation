@@ -8,7 +8,7 @@ import PIL.Image as Image
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from skimage import transform as tf
-import torchvision.datasets as dsets
+import datsetfolder as dsets
 import torchvision.transforms as transforms
 from torch.utils.data import Dataset, DataLoader
 
