@@ -82,9 +82,9 @@ class AugumentedDataset(Dataset):
     def __getitem__(self, idx):
         real_img = self.real_data.__getitem__(idx)[0]
         real_np = np.array(real_img)
-        fake_img = torch.Tensor(self.earser(real_np))
+        fake_img2 = skewed_transform(real_np)
         real_np = np.array(real_img)
-        fake_img2 = torch.Tensor(skewed_transform(real_np))
+        fake_img = self.earser(real_np)
         real_labels, fake_labels = torch.tensor([1, 0]).type(torch.LongTensor), torch.tensor([0, 1]).type(torch.LongTensor)
         return real_img, real_labels, fake_img, fake_img2, fake_labels #torch.cat((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
 
@@ -98,9 +98,8 @@ if __name__ == '__main__':
     data_loader = iter(augument_data(23))
     real_img, label1, fake_img, fake_img2, label0 = next(data_loader)
     #img = np.array(mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg'))
-    eraser = get_random_eraser()
-    fake_img = eraser(real_img[0].numpy())
-    print(fake_img.shape, fake_img2.shape)
+    #eraser = get_random_eraser()
+    fake_img = fake_img[0] #eraser(real_img[0].numpy())
     mpimg.imsave("./out.png", real_img[0])
     mpimg.imsave("./out1.png", fake_img)
     mpimg.imsave("./out2.png", fake_img2[0])
