@@ -166,6 +166,7 @@ def train_wgan(train_a=False):
             # leafs
             imgs = Variable(imgs)
             imgs = imgs.permute(0, 3, 1, 2)
+            imgs = imgs.type(torch.FloatTensor)
             bs = imgs.size(0)
             z = Variable(torch.randn(bs, args.z_dim))
             imgs, z = utils.cuda([imgs, z])
