@@ -61,7 +61,7 @@ def gan_data(batch_size):
          transforms.ToTensor(),
          transforms.Normalize(mean=[0.5] * 3, std=[0.5] * 3)])
 
-    imagenet_data = dsets.ImageFolder(_DATASET_PATH), transform=transform)
+    imagenet_data = dsets.ImageFolder(_DATASET_PATH, transform=transform)
     data_loader = DataLoader(imagenet_data, batch_size=batch_size, shuffle=True, num_workers=4)
     return data_loader
 
