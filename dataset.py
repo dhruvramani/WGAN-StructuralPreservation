@@ -61,7 +61,7 @@ def gan_data(batch_size):
          #transforms.ToTensor(),
          transforms.Normalize(mean=[0.5] * 3, std=[0.5] * 3)])
 
-    imagenet_data = dsets.ImageFolder(_DATASET_PATH, transform=transform)
+    imagenet_data = dsets.ImageFolder(_DATASET_PATH) #, transform=transform)
     data_loader = DataLoader(imagenet_data, batch_size=batch_size, shuffle=True, num_workers=4)
     return data_loader
 
@@ -71,7 +71,7 @@ def skewed_transform(image):
     return modified
 
 class AugumentedDataset(Dataset):
-    def __init__(self, path=_DATASET_PATH):
+    def __init__(self, path=_DATASET_PATH, augument=True):
         self.path = path
         self.earser = get_random_eraser()
         self.real_data = dsets.ImageFolder(self.path)
@@ -88,8 +88,8 @@ class AugumentedDataset(Dataset):
         real_labels, fake_labels = torch.tensor([1, 0]).type(torch.LongTensor), torch.tensor([0, 1]).type(torch.LongTensor)
         return real_img, real_labels, fake_img, fake_img2, fake_labels #torch.cat((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
 
-def augument_data(batch_size):
-    celeba_dataset = AugumentedDataset()
+def augument_data(batch_size, augument=True):
+    celeba_dataset = AugumentedDataset(augument=augument)
     data_loader = DataLoader(celeba_dataset, batch_size=batch_size, shuffle=True)
     return data_loader
 
