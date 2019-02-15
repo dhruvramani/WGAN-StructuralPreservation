@@ -138,7 +138,7 @@ class AsthecitiyClassifier(nn.Module):
 
     def forward(self, x):
         print(x.shape)
-        pad = (int((218 - x.shape[2]) / 2), int((178 - x.shape[3]) / 2))
+        pad = (int((218 - x.shape[2]) / 2), int((218 - x.shape[2]) / 2), int((178 - x.shape[3]) / 2), int((178 - x.shape[3]) / 2))
         x = torch.nn.functional.pad(x, pad, "constant", 0)
         print(x.shape)
         x = self.features(x)
