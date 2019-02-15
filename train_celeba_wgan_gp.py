@@ -81,9 +81,9 @@ def train_aesthecity():
         train_loss, accu1 = 0.0, 0.0
         for i in range(step, le):
             real_img, label1, fake_img, fake_img2, label0 = next(dataloader)
-            real_img, fake_img, fake_img2 = real_img.type(torch.FloatTensor), fake_img.type(torch.FloatTensor), fake_img2.type(torch.FloatTensor)
-            imgs = torch.cat((fake_img2, real_img, fake_img))
-            labels = torch.cat((label0, label1, label0)).type(torch.FloatTensor)
+            real_img, fake_img, fake_img2 = real_img.type(torch.FloatTensor).to(device), fake_img.type(torch.FloatTensor).to(device), fake_img2.type(torch.FloatTensor).to(device)
+            imgs = torch.cat((fake_img2, real_img, fake_img)).to(device)
+            labels = torch.cat((label0, label1, label0)).type(torch.FloatTensor).to(device)
             imgs = imgs.permute(0, 3, 1, 2)
             optimizer.zero_grad()
             predictions = net(imgs)
