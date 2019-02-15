@@ -33,7 +33,7 @@ class LayerNorm(nn.Module):
 
 class Generator(nn.Module):
 
-    def __init__(self, in_dim, dim=64):
+    def __init__(self, in_dim, dim=178):
         super(Generator, self).__init__()
 
         def dconv_bn_relu(in_dim, out_dim):
@@ -58,6 +58,7 @@ class Generator(nn.Module):
         y = self.l1(x)
         y = y.view(y.size(0), -1, 4, 4)
         y = self.l2_5(y)
+        print(y.size())
         return y
 
 
@@ -137,12 +138,9 @@ class AsthecitiyClassifier(nn.Module):
         )
 
     def forward(self, x):
-        print(x.shape)
-        pad = ( int((178 - x.shape[3]) / 2), int((178 - x.shape[3]) / 2), int((218 - x.shape[2]) / 2), int((218 - x.shape[2]) / 2))
+        pad = (int((178 - x.shape[3]) / 2), int((178 - x.shape[3]) / 2), int((218 - x.shape[2]) / 2), int((218 - x.shape[2]) / 2))
         x = torch.nn.functional.pad(x, pad, "constant", 0)
-        print(x.shape)
         x = self.features(x)
-        print(x.size())
         x = x.view(x.size()[0], 128 * 25 * 20)
         x = self.classifier(x)
         return x
