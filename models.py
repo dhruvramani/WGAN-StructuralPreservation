@@ -138,6 +138,7 @@ class AsthecitiyClassifier(nn.Module):
 
     def forward(self, x):
         x = self.features(x)
+        print(x.size())
         x = x.view(x.size()[0], 128 * 25 * 20)
         x = self.classifier(x)
         return x
