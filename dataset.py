@@ -58,7 +58,7 @@ def gan_data(batch_size):
          transforms.Lambda(crop),
          #transforms.ToPILImage(),
          #transforms.Resize(size=(re_size, re_size), interpolation=Image.BICUBIC),
-         transforms.ToTensor(),
+         #transforms.ToTensor(),
          transforms.Normalize(mean=[0.5] * 3, std=[0.5] * 3)])
 
     imagenet_data = dsets.ImageFolder(_DATASET_PATH, transform=transform)
