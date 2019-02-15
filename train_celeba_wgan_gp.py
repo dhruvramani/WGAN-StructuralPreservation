@@ -172,7 +172,8 @@ def train_wgan(train_a=False):
             imgs, z = utils.cuda([imgs, z])
 
             f_imgs = G(z)
-
+            print(f_imgs.shape)
+            _ = input(" ")
             # train D
             r_logit = D(imgs)            # f(x)
             f_logit = D(f_imgs.detach()) # f(G(z))
