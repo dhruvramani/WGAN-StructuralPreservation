@@ -94,7 +94,11 @@ def augument_data(batch_size, augument=True):
     return data_loader
 
 if __name__ == '__main__':
-    
+    data_loader = gan_data(23)
+    for i, (imgs, _) in enumerate(data_loader):
+        print(imgs.shape)
+
+    '''
     data_loader = iter(augument_data(23))
     real_img, label1, fake_img, fake_img2, label0 = next(data_loader)
     #img = np.array(mpimg.imread('/home/nevronas/dataset/img_align_celeba/1/011000.jpg'))
@@ -103,7 +107,6 @@ if __name__ == '__main__':
     mpimg.imsave("./out.png", real_img[0])
     mpimg.imsave("./out1.png", fake_img)
     mpimg.imsave("./out2.png", fake_img2[0])
-    '''
     img = Image.fromarray(img, 'RGB')
     img.save('./foo.png')
     img.show() '''
