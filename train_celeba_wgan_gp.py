@@ -36,9 +36,9 @@ parser.add_argument('--alr', default=0.001, type=float, help="learning rate for 
 parser.add_argument('--aresume', '-ar', type=int, default=0, help='resume classifier from checkpoint')
 
 args = parser.parse_args()
-net = models.AsthecitiyClassifier()
-D = models.DiscriminatorWGANGP(3)
-G = models.Generator(args.z_dim)
+net = models.AsthecitiyClassifier().to(device)
+D = models.DiscriminatorWGANGP(3).to(device)
+G = models.Generator(args.z_dim).to(device)
 
 def gradient_penalty(x, y, f):
     # interpolation
