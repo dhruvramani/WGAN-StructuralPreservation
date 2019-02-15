@@ -130,7 +130,7 @@ class AsthecitiyClassifier(nn.Module):
             nn.BatchNorm2d(128),
         )
         self.classifier = nn.Sequential(
-            nn.Linear(128 * 25 *20, 256),
+            nn.Linear(128 * 6 *6, 256),
             nn.ReLU(inplace=True),
             nn.Dropout(),
             nn.Linear(256, num_classes),
@@ -141,7 +141,6 @@ class AsthecitiyClassifier(nn.Module):
         #pad = (int((178 - x.shape[3]) / 2), int((178 - x.shape[3]) / 2), int((218 - x.shape[2]) / 2), int((218 - x.shape[2]) / 2))
         #x = torch.nn.functional.pad(x, pad, "constant", 0)
         x = self.features(x)
-        print(x.size())
-        x = x.view(x.size()[0], 128 * 25 * 20)
+        x = x.view(x.size()[0], 128 * 6 * 6)
         x = self.classifier(x)
         return x
