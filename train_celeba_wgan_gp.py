@@ -114,16 +114,17 @@ def train_aesthecity():
         print("Best Metrics : {}".format(best_acc))
 
 
-def train_wgan(train_a=False):
+def train_wgan(train_a=True):
     global G
     global D
     global net
 
     if(train_a):
-        if(os.path.isfile('./save/aes/best.ckpt')):
-            net.load_state_dict(torch.load('./save/aes/best.ckpt'))
-        elif(os.path.isfile('./save/aes/network.ckpt')):
-            net.load_state_dict(torch.load('./save/aes/network.ckpt'))
+        # TODO : Uncomment
+        #if(os.path.isfile('./save/aes/best.ckpt')):
+        #    net.load_state_dict(torch.load('./save/aes/best.ckpt'))
+        #elif(os.path.isfile('./save/aes/network.ckpt')):
+        net.load_state_dict(torch.load('./save/aes/network.ckpt'))
 
     data_loader = gan_data(args.batch_size)
     utils.cuda([D, G])
