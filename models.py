@@ -58,7 +58,6 @@ class Generator(nn.Module):
         y = self.l1(x)
         y = y.view(y.size(0), -1, 4, 4)
         y = self.l2_5(y)
-        print(y.size())
         return y
 
 
