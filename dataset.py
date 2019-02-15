@@ -8,6 +8,7 @@ import PIL.Image as Image
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from skimage import transform as tf
+from scipy.misc import imresize
 import datsetfolder as dsets
 import torchvision.transforms as transforms
 from torch.utils.data import Dataset, DataLoader
@@ -58,8 +59,8 @@ def gan_data(batch_size):
          transforms.Lambda(crop),
          transforms.ToPILImage(),
          transforms.Resize(size=(re_size, re_size), interpolation=Image.BICUBIC),
-         transforms.ToTensor(),
-         transforms.Normalize(mean=[0.5] * 3, std=[0.5] * 3)])
+         transforms.ToTensor()])
+         #transforms.Normalize(mean=[0.5] * 3, std=[0.5] * 3)])
 
     imagenet_data = dsets.ImageFolder(_DATASET_PATH, transform=transform)
     data_loader = DataLoader(imagenet_data, batch_size=batch_size, shuffle=True, num_workers=4)
@@ -75,6 +76,7 @@ class AugumentedDataset(Dataset):
         self.path = path
         self.earser = get_random_eraser()
         self.real_data = dsets.ImageFolder(self.path)
+        self.resize_size = 64
 
     def __len__(self):
         return int(self.real_data.__len__())
@@ -82,11 +84,13 @@ class AugumentedDataset(Dataset):
     def __getitem__(self, idx):
         real_img = self.real_data.__getitem__(idx)[0]
         real_np = np.array(real_img)
-        fake_img2 = skewed_transform(real_np)
-        real_np = np.array(real_img)
-        fake_img = self.earser(real_np)
+        real_np = imresize(real_np, (self.resize_size, self.resize_size))
+        img = real_np
+        fake_img2 = skewed_transform(img)
+        img = real_np
+        fake_img = self.earser(img)
         real_labels, fake_labels = torch.tensor([1, 0]).type(torch.LongTensor), torch.tensor([0, 1]).type(torch.LongTensor)
-        return real_img, real_labels, fake_img, fake_img2, fake_labels #torch.cat((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
+        return real_np, real_labels, fake_img, fake_img2, fake_labels #torch.cat((real_img, fake_img)), torch.Tensor([1, 0]).type(torch.LongTensor)
 
 def augument_data(batch_size, augument=True):
     celeba_dataset = AugumentedDataset(augument=augument)
