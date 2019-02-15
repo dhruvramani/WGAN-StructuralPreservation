@@ -90,7 +90,7 @@ def train_aesthecity():
             predictions = net(imgs)
             loss = bce(predictions, labels)
             loss.backward()
-            
+            optimizer.step()
             tl = loss.item()
             train_loss += tl
             accu = (torch.max(predictions, 1)[1] == torch.max(labels, 1)[1]).sum().item()
