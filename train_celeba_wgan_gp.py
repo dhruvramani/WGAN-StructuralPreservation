@@ -33,7 +33,7 @@ parser.add_argument('--n_critic', default=5, type=int, help="traing generator in
 parser.add_argument('--z_dim', default=100, type=int)
 
 parser.add_argument('--alr', default=0.001, type=float, help="learning rate for classifier")
-parser.add_argument('--aresume', '-ar', type=int, default=0, help='resume classifier from checkpoint')
+parser.add_argument('--aresume', '-ar', type=int, default=1, help='resume classifier from checkpoint')
 
 args = parser.parse_args()
 net = models.AsthecitiyClassifier().to(device)
@@ -230,5 +230,5 @@ def train_wgan(train_a=False):
 
 
 if __name__ == '__main__':
-    train_aesthecity()
+    #train_aesthecity()
     train_wgan(train_a=True)
