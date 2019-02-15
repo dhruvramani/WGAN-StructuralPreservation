@@ -94,8 +94,8 @@ def augument_data(batch_size, augument=True):
     return data_loader
 
 if __name__ == '__main__':
-    data_loader = gan_data(23)
-    for i, (imgs, _) in enumerate(data_loader):
+    data_loader = augument_data(23)
+    for i, (imgs, _, _, _, _) in enumerate(data_loader):
         print(imgs.shape)
 
     '''
