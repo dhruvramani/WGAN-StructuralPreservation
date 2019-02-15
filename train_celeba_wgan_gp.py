@@ -32,8 +32,9 @@ parser.add_argument('--epochs', '-e', type=int, default=50, help='number of args
 parser.add_argument('--n_critic', default=5, type=int, help="traing generator in these many args.epochs as compared to critic")
 parser.add_argument('--z_dim', default=100, type=int)
 
-parser.add_argument('--alr', default=0.001, type=float, help="learning rate for classifier")
-parser.add_argument('--aresume', '-ar', type=int, default=1, help='resume classifier from checkpoint')
+parser.add_argument('--alr', default=0.001, type=float,      help='learning rate for classifier')
+parser.add_argument('--aresume', '-ar', type=int, default=0, help='resume classifier from checkpoint')
+parser.add_argument('--aepochs', '-ae', type=int, default=5, help='no. of epochs for classifier')
 
 args = parser.parse_args()
 net = models.AsthecitiyClassifier().to(device)
@@ -121,10 +122,10 @@ def train_wgan(train_a=True):
 
     if(train_a):
         # TODO : Uncomment
-        #if(os.path.isfile('./save/aes/best.ckpt')):
-        #    net.load_state_dict(torch.load('./save/aes/best.ckpt'))
-        #elif(os.path.isfile('./save/aes/network.ckpt')):
-        net.load_state_dict(torch.load('./save/aes/network.ckpt'))
+        if(os.path.isfile('./save/aes/best.ckpt')):
+            net.load_state_dict(torch.load('./save/aes/best.ckpt'))
+        elif(os.path.isfile('./save/aes/network.ckpt')):
+            net.load_state_dict(torch.load('./save/aes/network.ckpt'))
 
     data_loader = gan_data(args.batch_size)
     utils.cuda([D, G])
@@ -231,5 +232,5 @@ def train_wgan(train_a=True):
 
 
 if __name__ == '__main__':
-    #train_aesthecity()
+    train_aesthecity()
     train_wgan(train_a=True)
