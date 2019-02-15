@@ -234,5 +234,5 @@ def train_wgan(train_a=True):
 
 
 if __name__ == '__main__':
-    train_aesthecity()
+    #train_aesthecity()
     train_wgan(train_a=True)
