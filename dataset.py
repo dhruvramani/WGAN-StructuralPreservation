@@ -56,12 +56,12 @@ def gan_data(batch_size):
     transform = transforms.Compose(
         [transforms.ToTensor(),
          transforms.Lambda(crop),
-         #transforms.ToPILImage(),
-         #transforms.Resize(size=(re_size, re_size), interpolation=Image.BICUBIC),
-         #transforms.ToTensor(),
+         transforms.ToPILImage(),
+         transforms.Resize(size=(re_size, re_size), interpolation=Image.BICUBIC),
+         transforms.ToTensor(),
          transforms.Normalize(mean=[0.5] * 3, std=[0.5] * 3)])
 
-    imagenet_data = dsets.ImageFolder(_DATASET_PATH) #, transform=transform)
+    imagenet_data = dsets.ImageFolder(_DATASET_PATH), transform=transform)
     data_loader = DataLoader(imagenet_data, batch_size=batch_size, shuffle=True, num_workers=4)
     return data_loader
 
@@ -94,8 +94,8 @@ def augument_data(batch_size, augument=True):
     return data_loader
 
 if __name__ == '__main__':
-    data_loader = augument_data(23)
-    for i, (imgs, _, _, _, _) in enumerate(data_loader):
+    data_loader = gan_data(23)
+    for i, (imgs, _, ) in enumerate(data_loader):
         print(imgs.shape)
 
     '''

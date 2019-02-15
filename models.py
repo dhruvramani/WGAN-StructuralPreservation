@@ -33,7 +33,7 @@ class LayerNorm(nn.Module):
 
 class Generator(nn.Module):
 
-    def __init__(self, in_dim, dim=178):
+    def __init__(self, in_dim, dim=64):
         super(Generator, self).__init__()
 
         def dconv_bn_relu(in_dim, out_dim):
