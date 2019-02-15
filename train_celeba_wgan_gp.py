@@ -224,7 +224,9 @@ def train_wgan(train_a=True):
 
                 save_dir = './sample_images_while_training/celeba_wgan_gp'
                 utils.mkdir(save_dir)
-                torchvision.utils.save_image(f_imgs_sample, '%s/Epoch_(%d)_(%dof%d).jpg' % (save_dir, epoch, i + 1, len(data_loader)), nrow=10)
+                torchvision.utils.save_image(f_imgs_sample, "{}/out.png".format(save_dir))
+                if (i + 1) % 500 == 0:
+                    torchvision.utils.save_image(f_imgs_sample, '%s/Epoch_(%d)_(%dof%d).jpg' % (save_dir, epoch, i + 1, len(data_loader)), nrow=10)
 
 
         print("Epoch {} - D Loss : {:.4f} - G Loss : {:.4f}".format(epoch, int(dl / d_count), int(gl / g_count)))
