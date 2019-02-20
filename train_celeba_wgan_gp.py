@@ -30,6 +30,7 @@ parser.add_argument('--batch_size', default=24, type=int)
 parser.add_argument('--resume', '-r', type=int, default=0, help='resume from checkpoint')
 parser.add_argument('--epochs', '-e', type=int, default=50, help='number of args.epochs to train.')
 parser.add_argument('--n_critic', default=5, type=int, help="traing generator in these many args.epochs as compared to critic")
+parser.add_argument('--regterm', default=2.5, type=float, help="regularization term for aesthetic loss")
 parser.add_argument('--z_dim', default=100, type=int)
 
 parser.add_argument('--alr', default=0.001, type=float,      help='learning rate for classifier')
@@ -127,7 +128,7 @@ def train_wgan(train_a=True):
         elif(os.path.isfile('./save/aes/network.ckpt')):
             net.load_state_dict(torch.load('./save/aes/network.ckpt'))
 
-    data_loader = gan_data(args.batch_size)
+    _, data_loader = gan_data(args.batch_size)
     utils.cuda([D, G])
 
     d_optimizer = torch.optim.Adam(D.parameters(), lr=args.lr, betas=(0.5, 0.999))
@@ -188,7 +189,7 @@ def train_wgan(train_a=True):
             d_loss = -wd + gp * 10.0 
 
             if(train_a):
-                d_loss += al
+                d_loss += args.regterm * al
 
             D.zero_grad()
             d_loss.backward()
