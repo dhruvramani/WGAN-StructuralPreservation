@@ -13,5 +13,5 @@ ckpt = utils.load_checkpoint(ckpt_dir)
 G = models.Generator(100).to(device)
 G.load_state_dict(ckpt['G'])
 
-scores = compute_score_raw('celeba', 64, '/home/nevronas/dataset/img_align_celeba', 200, 24, './save/metrics/real', './save/metrics/fake', G, 100, conv_model='resnet34', workers=4)
+scores = compute_score_raw('celeba', 64, '/home/nevronas/dataset/img_align_celeba', 10, 5, './save/metrics/real', './save/metrics/fake', G, 100, conv_model='resnet34', workers=4)
 print(scores[30])
