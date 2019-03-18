@@ -399,7 +399,7 @@ def compute_score(real, fake, k=1, sigma=1, sqrt=True):
 
 
 def compute_score_raw(dataset, imageSize, dataroot, sampleSize, batchSize,
-                      saveFolder_r, , nesaveFolder_ftG, nz,
+                      saveFolder_r, saveFolder_f, netG, nz,
                       conv_model='resnet34', workers=4):
 
     sampleTrue(dataset, imageSize, dataroot, sampleSize, batchSize,
@@ -408,7 +408,7 @@ def compute_score_raw(dataset, imageSize, dataroot, sampleSize, batchSize,
 
     convnet_feature_saver = ConvNetFeatureSaver(model=conv_model,
                                                 batchSize=batchSize, workers=workers)
-    feature_r = convnet_feature_saver.save(dataset)#saveFolder_r)
+    feature_r = convnet_feature_saver.save(dataset) #saveFolder_r)
     feature_f = convnet_feature_saver.save(saveFolder_f)
 
     # 4 feature spaces and 7 scores + incep + modescore + fid
