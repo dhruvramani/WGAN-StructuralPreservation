@@ -400,7 +400,7 @@ def compute_score(real, fake, k=1, sigma=1, sqrt=True):
 
 def compute_score_raw(dataset, imageSize, dataroot, sampleSize, batchSize,
                       saveFolder_r, saveFolder_f, netG, nz,
-                      conv_model='resnet34', workers=4):
+                      conv_model='resnet34', workers=1):
 
     sampleTrue(dataset, imageSize, dataroot, sampleSize, batchSize,
                saveFolder_r, workers=workers)
