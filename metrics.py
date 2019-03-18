@@ -408,7 +408,7 @@ def compute_score_raw(dataset, imageSize, dataroot, sampleSize, batchSize,
 
     convnet_feature_saver = ConvNetFeatureSaver(model=conv_model,
                                                 batchSize=batchSize, workers=workers)
-    feature_r = convnet_feature_saver.save(dataset) #saveFolder_r)
+    feature_r = convnet_feature_saver.save(dataroot) #saveFolder_r)
     feature_f = convnet_feature_saver.save(saveFolder_f)
 
     # 4 feature spaces and 7 scores + incep + modescore + fid
